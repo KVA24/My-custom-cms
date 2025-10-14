@@ -1,0 +1,5 @@
+#!/bin/sh -eu
+cat <<EOF
+window.API_DOMAIN="${API_DOMAIN}";
+window.GOOGLE_RECAPTCHA_KEY="${GOOGLE_RECAPTCHA_KEY}";
+EOF

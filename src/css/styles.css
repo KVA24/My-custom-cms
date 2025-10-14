@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Manufacturing+Consent&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+@import 'tailwindcss';
+
+/* ReUI Configs */
+@import './config.reui.css';
+
+/** Global Styles **/
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  *:focus-visible {
+    @apply outline-ring rounded-xs shadow-none outline-2 outline-offset-3 transition-none;
+  }
+  
+  body {
+    font-family: var(--font-custom), sans-serif;
+  }
+}
+
+/* Metronic Components  */
+@import './components/image-input.css';
+@import './components/apexcharts.css';
+@import './components/leaflet.css';
+@import './components/rating.css';
+@import './components/image-input.css';
+@import './components/scrollable.css';
+@import './components/table.css';
+@import './components/flatpickr.css';
+
+/** Dark/Light Theme Variant **/
+@custom-variant dark (&:is(.dark *));
+@custom-variant light (&:not(.dark *));
