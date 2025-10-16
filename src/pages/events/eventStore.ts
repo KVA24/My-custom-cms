@@ -9,7 +9,7 @@ export interface DataList {
   state: string;
   externalId: string;
   parameterized: boolean;
-  eventParamResponses: EventParamResponsesMap[]
+  eventParams: eventParamsMap[]
 }
 
 export interface DataRequest {
@@ -19,10 +19,10 @@ export interface DataRequest {
   state: string;
   externalId: string;
   parameterized: boolean;
-  eventParamResponses: EventParamResponsesMap[]
+  eventParams: eventParamsMap[]
 }
 
-export interface EventParamResponsesMap {
+export interface eventParamsMap {
   externalId: string;
   name: string;
   dataType: string;
@@ -49,7 +49,7 @@ class EventStore {
     state: '',
     externalId: '',
     parameterized: false,
-    eventParamResponses: [{
+    eventParams: [{
       externalId: '',
       name: '',
       dataType: '',
@@ -72,7 +72,7 @@ class EventStore {
       state: '',
       externalId: '',
       parameterized: false,
-      eventParamResponses: [{
+      eventParams: [{
         externalId: '',
         name: '',
         dataType: '',
@@ -169,13 +169,13 @@ class EventStore {
   
   create = async () => {
     const data: DataRequest | null = this.dataRequest
-    const dataFormated: DataRequest = {...data, eventParamResponses: data.parameterized ? data.eventParamResponses : []}
+    const dataFormated: DataRequest = {...data, eventParams: data.parameterized ? data.eventParams : []}
     await this.handleRequest(() => eventService.create(dataFormated), "Created", false);
   }
   
   update = async () => {
     const data: DataRequest | null = this.dataRequest
-    const dataFormated: DataRequest = {...data, eventParamResponses: data.parameterized ? data.eventParamResponses : []}
+    const dataFormated: DataRequest = {...data, eventParams: data.parameterized ? data.eventParams : []}
     await this.handleRequest(() => eventService.update(data.id, dataFormated), "Updated", false);
   }
   
@@ -184,7 +184,7 @@ class EventStore {
 }
 
 const eventStore = new EventStore()
-export const useAuthStore = () => eventStore
+export const useEventStore = () => eventStore
 
 export {EventStore}
 export default eventStore

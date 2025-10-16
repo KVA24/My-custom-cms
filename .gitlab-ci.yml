@@ -16,8 +16,8 @@ stages:
 ## Global variables ##
 variables:
   RUNNER_TAG: &RUNNER_TAG shared-k8s-runner
-  IMAGE_TAG_PREFIX: mytelup
-  SERVICE_NAME: mytelup-cms-frontend
+  IMAGE_TAG_PREFIX: gamevali
+  SERVICE_NAME: vali-cms-frontend
   ALTERNATIVE_IMAGE_TAG: ${CI_COMMIT_TAG}
 default:
   tags:
@@ -61,7 +61,7 @@ update-image-tag:dev:
   extends: .update-k8s-deployment-image-tag
   variables:
     K8S_CLUSTER_NAME: wi-lv-dev
-    K8S_NAMESPACE: mytelup-dev
+    K8S_NAMESPACE: gamevali-dev
     KUBECONFIG_FILE: /usr/local/k8s/.credentials/${K8S_CLUSTER_NAME}
   rules:
     - if: '$CI_COMMIT_TAG =~ /^dev_[0-9]{4}\.[0-9]{2}\.[0-9]{2}_v[0-9]+$/'

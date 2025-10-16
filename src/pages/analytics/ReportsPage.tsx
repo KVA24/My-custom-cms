@@ -11,9 +11,9 @@ const ReportsPage = () => {
         <p className="text-gray-600">Generate and view reports</p>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Reports</CardTitle>
+          <CardTitle className="text-xl">Reports</CardTitle>
           <CardDescription>This is a placeholder for the reports page</CardDescription>
         </CardHeader>
         <CardContent>

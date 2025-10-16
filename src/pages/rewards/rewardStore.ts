@@ -64,7 +64,7 @@ class RewardStore {
     itemId: "",
     itemCode: ""
   }
-  listType: string[] = ["DIAMOND", "HAMMER", "MIX", "MB", "POINT", "JACKFRUIT"]
+  listType: string[] = ["POINT", "TURN", "BONUS_MILES"]
   listItems: any = []
   listItemsSelected: any = []
   
@@ -170,7 +170,7 @@ class RewardStore {
 }
 
 const rewardStore = new RewardStore()
-export const useAuthStore = () => rewardStore
+export const useRewardStore = () => rewardStore
 
 export {RewardStore}
 export default rewardStore

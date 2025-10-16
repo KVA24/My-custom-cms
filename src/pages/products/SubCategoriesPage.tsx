@@ -11,9 +11,9 @@ const SubCategoriesPage = () => {
         <p className="text-gray-600">Manage product sub-categories</p>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Sub Categories</CardTitle>
+          <CardTitle className="text-xl">Sub Categories</CardTitle>
           <CardDescription>This is a placeholder for the sub-categories page</CardDescription>
         </CardHeader>
         <CardContent>

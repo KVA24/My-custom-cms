@@ -1,8 +1,10 @@
 table {
   @apply w-full;
+  
   thead {
     tr {
       @apply border-b border-gray-200 dark:border-gray-700;
+      
       th {
         @apply text-left py-4 px-2 font-bold text-gray-500 dark:text-gray-400;
       }
@@ -12,6 +14,7 @@ table {
   tbody {
     tr {
       @apply border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800;
+      
       td {
         @apply p-2 font-normal text-sm;
       }

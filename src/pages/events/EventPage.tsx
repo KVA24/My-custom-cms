@@ -9,11 +9,11 @@ import {Edit, Plus, Search, Trash2} from "lucide-react"
 import CrudModal from "./components/CrudModal.tsx";
 import eventStore from "./eventStore.ts";
 import {observer} from "mobx-react-lite";
-import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import CustomPagination from "@/components/common/CustomPagination.tsx";
 import {useNavigate} from "react-router-dom";
 import BadgeRender from "@/components/common/BadgeRender.tsx";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb.tsx";
+import TableSkeleton from "@/components/common/TableSkeleton.tsx";
 
 interface User {
   id: string
@@ -71,7 +71,7 @@ const EventPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Events</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">Events</h1>
           <CustomBreadcrumb
             items={[
               {label: 'Home', href: '/'},
@@ -87,9 +87,9 @@ const EventPage = observer(() => {
         </Button>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Events List</CardTitle>
+          <CardTitle className="text-xl">Events List</CardTitle>
         </CardHeader>
         <CardContent>
           <div
@@ -109,9 +109,7 @@ const EventPage = observer(() => {
             </div>
           </div>
           {eventStore.isLoading ?
-            <div className="w-full flex justify-center">
-              <LoadingSpinner size={"md"}/>
-            </div>
+            <TableSkeleton rows={5} columns={3}/>
             :
             <Fragment>
               <div className="overflow-x-auto">

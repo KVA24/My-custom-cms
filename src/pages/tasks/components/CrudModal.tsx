@@ -13,14 +13,17 @@ import {storeSchema} from "@/schemas/itemSchema.ts";
 import {Button} from "@/components/ui/button.tsx";
 import {useTranslation} from "react-i18next";
 import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
+import {Label} from "@/components/ui/label.tsx";
+import {Input} from "@/components/ui/input.tsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
 
 interface ModalProps {
   isOpen: boolean
-  type: "create" | "edit" | "delete"
+  type: "create" | "edit" | "delete" | "updateState"
   onClose: () => void
 }
 
-const getTitle = (type: "create" | "edit" | "delete") => {
+const getTitle = (type: "create" | "edit" | "delete" | "updateState") => {
   switch (type) {
     case "create":
       return "Create Store"
@@ -28,12 +31,14 @@ const getTitle = (type: "create" | "edit" | "delete") => {
       return "Edit Store"
     case "delete":
       return "Delete Store"
+    case "updateState":
+      return "Switch Status"
     default:
       return "Modal"
   }
 }
 
-const getSize = (type: "create" | "edit" | "delete") => {
+const getSize = (type: "create" | "edit" | "delete" | "updateState") => {
   switch (type) {
     case "create":
       return "lg"
@@ -73,11 +78,16 @@ const CrudModal = observer(({isOpen, type, onClose}: ModalProps) => {
     }
   };
   
-  const handleSubmit = async (e: React.FormEvent, type: "create" | "edit" | "delete") => {
+  const handleSubmit = async (e: React.FormEvent, type: "create" | "edit" | "delete" | "updateState") => {
     e.preventDefault()
     
     if (type === "delete") {
       taskStore.delete().then(() => taskStore.isOk && onClose())
+      return
+    }
+    
+    if (type === "updateState") {
+      taskStore.updateStatus().then(() => taskStore.isOk && onClose())
       return
     }
     
@@ -126,6 +136,43 @@ const CrudModal = observer(({isOpen, type, onClose}: ModalProps) => {
           {type === "delete" && (
             <div className="flex flex-col gap-4">
               <p>Are you sure want to delete this?</p>
+            </div>
+          )}
+          {type === "updateState" && (
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-2">
+                <Label variant="secondary">
+                  Status
+                </Label>
+                <Select
+                  name="statusUpdate"
+                  value={taskStore.statusUpdate || ""}
+                  onValueChange={(value) => taskStore.statusUpdate = value}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Choose Type"/>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {(taskStore.statusList || []).map((item) => (
+                      <SelectItem key={item} value={item}>{item}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label variant="secondary">
+                  OTP
+                </Label>
+                <Input
+                  autoComplete="off"
+                  id="otpCode"
+                  name="otpCode"
+                  type="text"
+                  value={taskStore.otpCode}
+                  onChange={(e) => taskStore.otpCode = e.target.value}
+                  placeholder="Enter"
+                  // error={taskStore.otpCode}
+                />
+              </div>
             </div>
           )}
         

@@ -7,13 +7,13 @@ import {Input} from "@/components/ui/input.tsx"
 import {Search, Undo} from "lucide-react"
 import logStore from "./logStore.ts";
 import {observer} from "mobx-react-lite";
-import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import {dateTimeFormat} from "@/lib/utils.ts";
 import SimplePagination from "@/components/common/SimplePagination.tsx";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
 import {Button} from "@/components/ui/button.tsx";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb.tsx";
 import DateRangePicker from "@/components/ui/dateRangePicker.tsx";
+import TableSkeleton from "@/components/common/TableSkeleton.tsx";
 
 interface User {
   id: string
@@ -65,7 +65,7 @@ const ActivityLogsPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Action Logs</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">Action Logs</h1>
           <CustomBreadcrumb
             items={[
               {label: 'Home', href: '/'},
@@ -75,9 +75,9 @@ const ActivityLogsPage = observer(() => {
         </div>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Logs List</CardTitle>
+          <CardTitle className="text-xl">Logs List</CardTitle>
         </CardHeader>
         <CardContent>
           <div
@@ -85,7 +85,7 @@ const ActivityLogsPage = observer(() => {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"/>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 placeholder={t("common.search")}
                 value={logStore.searchKey}
                 onChange={(e) => logStore.searchKey = e.target.value}
@@ -148,9 +148,7 @@ const ActivityLogsPage = observer(() => {
             </div>
           </div>
           {logStore.isLoading ?
-            <div className="w-full flex justify-center">
-              <LoadingSpinner size={"md"}/>
-            </div>
+            <TableSkeleton rows={5} columns={3}/>
             :
             <Fragment>
               <div className="overflow-x-auto">

@@ -11,9 +11,9 @@ const SettingsPage = () => {
         <p className="text-gray-600">Configure your application settings</p>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Settings</CardTitle>
+          <CardTitle className="text-xl">Settings</CardTitle>
           <CardDescription>This is a placeholder for the settings page</CardDescription>
         </CardHeader>
         <CardContent>

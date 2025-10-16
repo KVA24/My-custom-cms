@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import {observer} from "mobx-react-lite"
 import {useNavigationStore} from "@/stores/navigationStore"
 import Sidebar from "./Sidebar"
@@ -9,10 +11,10 @@ const AppLayout = observer(({children}: { children: React.ReactNode }) => {
   const navigationStore = useNavigationStore()
   
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex h-screen bg-background">
       {navigationStore.mobileSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden transition-opacity duration-300"
           onClick={() => navigationStore.closeMobileSidebar()}
         />
       )}
@@ -29,8 +31,8 @@ const AppLayout = observer(({children}: { children: React.ReactNode }) => {
       
       <div className="flex-1 flex flex-col overflow-hidden lg:ml-0">
         <Header/>
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 dark:bg-gray-900 p-6">
-          <div className="max-w-7xl mx-auto">{children}</div>
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-6">
+          <div className="max-w-7xl mx-auto fade-in">{children}</div>
         </main>
       </div>
     </div>

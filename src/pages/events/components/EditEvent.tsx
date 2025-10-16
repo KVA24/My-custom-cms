@@ -6,7 +6,7 @@ import {Button} from "@/components/ui/button.tsx";
 import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import {useParams} from "react-router";
 import {observer} from "mobx-react-lite";
-import {ChevronLeft, PlusIcon, Trash2} from "lucide-react";
+import {ChevronLeft, Trash2} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb.tsx";
 import {Label} from "@/components/ui/label.tsx";
@@ -55,6 +55,7 @@ const EditEvent = observer(() => {
           validationErrors[err.path as keyof DataRequest] = err.message
         })
         eventStore.errors = validationErrors
+        console.log(eventStore.errors)
       }
     }
   }
@@ -72,7 +73,7 @@ const EditEvent = observer(() => {
           {label: 'Create Event', isCurrent: true},
         ]}
       />
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader className="flex items-center justify-start gap-2">
           <Button
             variant="secondary"
@@ -81,7 +82,7 @@ const EditEvent = observer(() => {
             data-tooltip-content={t("common.back")}
             onClick={handleBack}
           >
-            <ChevronLeft className="h-4 w-4"/>
+            <ChevronLeft className="h-4 w-4 text-foreground"/>
           </Button>
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Edit Event</h1>
         </CardHeader>
@@ -156,11 +157,11 @@ const EditEvent = observer(() => {
           {eventStore.dataRequest.parameterized &&
             <div className="flex flex-col gap-4">
               <Label variant="secondary">
-                Parameterized <span className="text-red-500">*</span>
+                Params {eventStore.dataRequest.parameterized && <span className="text-red-500">*</span>}
               </Label>
               <div className="flex items-center justify-start">
                 <Button variant="primary" onClick={() => {
-                  eventStore.dataRequest.eventParamResponses.push({
+                  eventStore.dataRequest.eventParams.push({
                     name: '',
                     externalId: '',
                     dataType: '',
@@ -171,9 +172,9 @@ const EditEvent = observer(() => {
                   Add param
                 </Button>
               </div>
-              {eventStore.errors.eventParamResponses &&
-                <p className="text-sm text-destructive mt-1">{eventStore.errors.eventParamResponses}</p>}
-              {(eventStore.dataRequest.eventParamResponses && eventStore.dataRequest.eventParamResponses.length > 0) && (
+              {eventStore.errors.eventParams &&
+                <p className="text-sm text-destructive mt-1">{eventStore.errors.eventParams}</p>}
+              {(eventStore.dataRequest.eventParams && eventStore.dataRequest.eventParams.length > 0) && (
                 <div className="p-4 rounded-md border flex flex-col gap-2">
                   <div className="grid grid-cols-6 gap-2 bg-gray-50 p-2 rounded-md items-center">
                     <p className="text-sm font-bold">Name</p>
@@ -183,7 +184,7 @@ const EditEvent = observer(() => {
                     <p className="text-sm font-bold">Value</p>
                     <p className="text-sm font-bold text-center">Action</p>
                   </div>
-                  {(eventStore.dataRequest.eventParamResponses).map((item, index) => (
+                  {(eventStore.dataRequest.eventParams).map((item, index) => (
                     <div key={index}>
                       <div className="grid grid-cols-6 gap-2 bg-gray-50 p-2 rounded-md cursor-pointer items-center">
                         <Input
@@ -211,7 +212,7 @@ const EditEvent = observer(() => {
                         <Select
                           name="schedule.dataType"
                           value={item.dataType || ""}
-                          error={eventStore.errors[`eventParamResponses[${index}].dataType`]}
+                          error={eventStore.errors[`eventParams[${index}].dataType`]}
                           onValueChange={(value) =>
                             item.dataType = value
                           }>
@@ -227,7 +228,7 @@ const EditEvent = observer(() => {
                         <Select
                           name="schedule.operator"
                           value={item.operator || ""}
-                          error={eventStore.errors[`eventParamResponses[${index}].operator`]}
+                          error={eventStore.errors[`eventParams[${index}].operator`]}
                           onValueChange={(value) =>
                             item.operator = value
                           }>
@@ -256,7 +257,7 @@ const EditEvent = observer(() => {
                                   data-tooltip-content={"Delete reward"}
                                   variant={"danger"}
                                   size={"sm"} onClick={() => {
-                            eventStore.dataRequest.eventParamResponses.splice(index, 1)
+                            eventStore.dataRequest.eventParams.splice(index, 1)
                           }}>
                             <Trash2 className="h-4 w-4"/>
                           </Button>

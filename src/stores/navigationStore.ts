@@ -7,6 +7,7 @@ import {
   ClipboardClock,
   FileQuestionIcon,
   History,
+  LanguagesIcon,
   LayoutDashboard,
   LayoutList,
   ListCheckIcon,
@@ -139,6 +140,13 @@ class NavigationStore {
       label: "nav.configs",
       icon: Settings,
       path: "/cms/configs",
+      roles: ["ADMIN"]
+    },
+    {
+      id: "languages",
+      label: "Languages",
+      icon: LanguagesIcon,
+      path: "/cms/languages",
       roles: ["ADMIN"]
     },
     {

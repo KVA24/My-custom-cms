@@ -4,17 +4,19 @@ import {Label} from "@/components/ui/label.tsx";
 import {Input} from "@/components/ui/input.tsx";
 import taskStore, {DataRequest} from "../taskStore.ts";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
-import {poolSchema} from "@/schemas/poolSchema.ts";
+import {taskSchema} from "@/schemas/taskSchema.ts";
 import {Button} from "@/components/ui/button.tsx";
 import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import {useParams} from "react-router";
 import {observer} from "mobx-react-lite";
-import {ChevronLeft, PlusIcon, Trash2} from "lucide-react";
+import {ChevronLeft, Trash2} from "lucide-react";
 import {useTranslation} from "react-i18next";
 import PickItemModal from "./PickItemModal.tsx";
 import {Switch, SwitchIndicator, SwitchWrapper} from "@/components/ui/switch.tsx";
-import DateTimePicker from "@/components/ui/dateTimePicker.tsx";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb.tsx";
+import {Textarea} from "@/components/ui/textarea.tsx";
+import DatePickerInput from "@/components/ui/datePicker.tsx";
+import DateRangePicker from "@/components/ui/dateRangePicker.tsx";
 
 const EditTask = observer(() => {
   const {t} = useTranslation()
@@ -22,10 +24,11 @@ const EditTask = observer(() => {
   const [open, setOpen] = React.useState(false)
   
   useEffect(() => {
-    taskStore.getListRewards().then()
-    taskStore.getListFallbackPool().then()
-    taskStore.getListBudget().then()
-    taskStore.getDetail(id).then()
+    taskStore.callAllGet().then()
+    taskStore.getAllEvent().then()
+    taskStore.getDetail(id).then(() => {
+      taskStore.getSlidingType().then()
+    })
   }, [])
   
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +51,7 @@ const EditTask = observer(() => {
     e.preventDefault()
     
     try {
-      await poolSchema.validate(taskStore.dataRequest, {abortEarly: false})
+      await taskSchema.validate(taskStore.dataRequest, {abortEarly: false})
       taskStore.errors = {}
       taskStore.update().then()
     } catch (error: any) {
@@ -58,6 +61,7 @@ const EditTask = observer(() => {
           validationErrors[err.path as keyof DataRequest] = err.message
         })
         taskStore.errors = validationErrors
+        console.log(validationErrors)
       }
     }
   }
@@ -71,11 +75,11 @@ const EditTask = observer(() => {
       <CustomBreadcrumb
         items={[
           {label: 'Home', href: '/'},
-          {label: 'Pools', href: '/cms/pool'},
-          {label: 'Create Pool', isCurrent: true},
+          {label: 'Tasks', href: '/cms/tasks'},
+          {label: 'Edit Task', isCurrent: true},
         ]}
       />
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader className="flex items-center justify-start gap-2">
           <Button
             variant="secondary"
@@ -84,332 +88,370 @@ const EditTask = observer(() => {
             data-tooltip-content={t("common.back")}
             onClick={handleBack}
           >
-            <ChevronLeft className="h-4 w-4"/>
+            <ChevronLeft className="h-4 w-4 text-foreground"/>
           </Button>
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Edit Pool</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Edit Task</h1>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div className="flex flex-col gap-2">
               <Label variant="secondary">
-                Code <span className="text-red-500">*</span>
+                Name <span className="text-red-500">*</span>
               </Label>
               <Input
-                  autoComplete="off"
-                id="code"
-                name="code"
+                autoComplete="off"
+                id="name"
+                name="name"
                 type="text"
-                value={taskStore.dataRequest?.code || ""}
+                value={taskStore.dataRequest?.name || ""}
                 onChange={handleInputChange}
                 placeholder="Enter"
-                error={taskStore.errors.code}
+                error={taskStore.errors.name}
               />
             </div>
             <div className="flex flex-col gap-2">
               <Label variant="secondary">
-                Fallback Pool
+                Position <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                autoComplete="off"
+                id="position"
+                name="position"
+                type="number"
+                value={taskStore.dataRequest?.position || 0}
+                onChange={handleInputChange}
+                placeholder="Enter"
+                error={taskStore.errors.position}
+              />
+            </div>
+            <div className="flex flex-col col-span-2 gap-2">
+              <Label variant="secondary">
+                Description
+              </Label>
+              <Textarea
+                autoComplete="off"
+                id="description"
+                name="description"
+                value={taskStore.dataRequest?.description || ""}
+                onChange={(e) => {
+                  taskStore.dataRequest.description = e.target.value
+                }}
+                placeholder="Enter"
+                error={taskStore.errors.description}
+              />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-col gap-2">
+                <Label variant="secondary">
+                  Is Recurring ? <span className="text-red-500">*</span>
+                </Label>
+                <div className="w-full h-full flex items-center">
+                  <SwitchWrapper>
+                    <Switch size={"sm"} checked={taskStore.dataRequest.isRecurring}
+                            onCheckedChange={(checked) => taskStore.dataRequest.isRecurring = checked}/>
+                    <SwitchIndicator state="on"></SwitchIndicator>
+                    <SwitchIndicator state="off"></SwitchIndicator>
+                  </SwitchWrapper>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <Label variant="secondary">
+                  No End Date ? <span className="text-red-500">*</span>
+                </Label>
+                <div className="w-full h-full flex items-center">
+                  <SwitchWrapper>
+                    <Switch size={"sm"} checked={taskStore.dataRequest.isNoEndDate}
+                            onCheckedChange={(checked) => taskStore.dataRequest.isNoEndDate = checked}/>
+                    <SwitchIndicator state="on"></SwitchIndicator>
+                    <SwitchIndicator state="off"></SwitchIndicator>
+                  </SwitchWrapper>
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label variant="secondary">
+                {taskStore.dataRequest.isNoEndDate ? "Start Date" : "Start-End Date"} <span
+                className="text-red-500">*</span>
+              </Label>
+              {taskStore.dataRequest.isNoEndDate ? (
+                <DatePickerInput
+                  value={taskStore.dataRequest.startDate}
+                  onChange={(date) => {
+                    taskStore.dataRequest.startDate = date || null
+                  }}
+                />
+              ) : (
+                <DateRangePicker
+                  start={taskStore.dataRequest.startDate}
+                  end={taskStore.dataRequest.endDate}
+                  onApply={(range) => {
+                    console.log(range)
+                    taskStore.dataRequest.startDate = range?.from ?? new Date()
+                    taskStore.dataRequest.endDate = range?.to ?? new Date()
+                  }}
+                />
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label variant="secondary">
+                Period Unit <span className="text-red-500">*</span>
               </Label>
               <Select
-                name="fallbackPoolId"
-                value={taskStore.dataRequest?.fallbackPoolId || ""}
-                error={taskStore.errors.fallbackPoolId}
-                onValueChange={(value) =>
+                name="periodUnit"
+                value={taskStore.dataRequest?.periodUnit || ""}
+                error={taskStore.errors.periodUnit}
+                onValueChange={(value) => {
                   handleInputChange({
-                    target: {name: "fallbackPoolId", value},
+                    target: {name: "periodUnit", value},
                   } as React.ChangeEvent<HTMLInputElement>)
-                }>
+                  taskStore.getSlidingType().then()
+                }}>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose Pool"/>
+                  <SelectValue placeholder="Choose Unit"/>
                 </SelectTrigger>
                 <SelectContent>
-                  {(taskStore.listFallbackPools || []).map((item, index) => (
-                    <SelectItem key={index} value={item.id}>{item.code}</SelectItem>
+                  {(taskStore.objectList['periodUnit'] || []).map((item) => (
+                    <SelectItem key={item} value={item}>{item}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="flex flex-col gap-2">
               <Label variant="secondary">
-                Budget <span className="text-red-500">*</span>
+                Period Value <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                autoComplete="off"
+                id="periodValue"
+                name="periodValue"
+                type="number"
+                value={taskStore.dataRequest?.periodValue || 0}
+                onChange={handleInputChange}
+                placeholder="Enter"
+                error={taskStore.errors.periodValue}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label variant="secondary">
+                Task Category
               </Label>
               <Select
-                name="poolBudgetId"
-                value={taskStore.dataRequest?.poolBudgetId || ""}
-                error={taskStore.errors.poolBudgetId}
+                name="taskCategory"
+                value={taskStore.dataRequest?.taskCategory || ""}
+                error={taskStore.errors.taskCategory}
                 onValueChange={(value) =>
                   handleInputChange({
-                    target: {name: "poolBudgetId", value},
+                    target: {name: "taskCategory", value},
                   } as React.ChangeEvent<HTMLInputElement>)
                 }>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose Budget"/>
+                  <SelectValue placeholder="Choose Category"/>
                 </SelectTrigger>
                 <SelectContent>
-                  {(taskStore.listBudgets || []).map((item) => (
-                    <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>
+                  {(taskStore.objectList['taskCategory'] || []).map((item) => (
+                    <SelectItem key={item} value={item}>{item}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
             <div className="flex flex-col gap-2">
               <Label variant="secondary">
-                State <span className="text-red-500">*</span>
+                Sliding Type
               </Label>
               <Select
-                name="state"
-                value={taskStore.dataRequest?.state || ""}
-                error={taskStore.errors.state}
+                name="slidingType"
+                value={taskStore.dataRequest?.slidingType || ""}
+                error={taskStore.errors.slidingType}
                 onValueChange={(value) =>
                   handleInputChange({
-                    target: {name: "state", value},
+                    target: {name: "slidingType", value},
                   } as React.ChangeEvent<HTMLInputElement>)
                 }>
                 <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose Status"/>
+                  <SelectValue placeholder="Choose Type"/>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={"ACTIVE"}>Active</SelectItem>
-                  <SelectItem value={"DISABLED"}>Disabled</SelectItem>
+                  {(taskStore.listSlidingType || []).map((item) => (
+                    <SelectItem key={item} value={item}>{item}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label variant="secondary">
+                Deep Link
+              </Label>
+              <Input
+                autoComplete="off"
+                id="deepLink"
+                name="deepLink"
+                type="text"
+                value={taskStore.dataRequest?.deepLink || ""}
+                onChange={handleInputChange}
+                placeholder="Enter"
+                error={taskStore.errors.deepLink}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label variant="secondary">
+                ImageId
+              </Label>
+              <Input
+                autoComplete="off"
+                id="imageId"
+                name="imageId"
+                type="text"
+                value={taskStore.dataRequest?.imageId || ""}
+                onChange={handleInputChange}
+                placeholder="Enter"
+                error={taskStore.errors.imageId}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label variant="secondary">
+                Reward Amount
+              </Label>
+              <Input
+                autoComplete="off"
+                id="rewardAmount"
+                name="rewardAmount"
+                type="number"
+                value={taskStore.dataRequest?.rewardAmount || 0}
+                onChange={handleInputChange}
+                placeholder="Enter"
+                error={taskStore.errors.rewardAmount}
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <Label variant="secondary">
+                OTP
+              </Label>
+              <Input
+                autoComplete="off"
+                id="otpCode"
+                name="otpCode"
+                type="text"
+                value={taskStore.dataRequest?.otpCode || ""}
+                onChange={handleInputChange}
+                placeholder="Enter"
+                error={taskStore.errors.otpCode}
+              />
             </div>
           </div>
           <div className="flex flex-col gap-4">
             <Label variant="secondary">
-              Rewards <span className="text-red-500">*</span>
+              Quest <span className="text-red-500">*</span>
             </Label>
             <div className="flex items-center justify-start">
               <Button variant="primary" onClick={() => {
-                taskStore.listRewardsSelected = [...taskStore.dataRequest.rewardMaps]
+                taskStore.listQuestSelected = [...taskStore.dataRequest.questDtos]
                 setOpen(true)
               }}>
-                Add rewards
+                Add quest
               </Button>
             </div>
-            {taskStore.errors.rewardMaps &&
-              <p className="text-sm text-destructive mt-1">{taskStore.errors.rewardMaps}</p>}
-            {(taskStore.dataRequest.rewardMaps && taskStore.dataRequest.rewardMaps.length > 0) && (
+            {taskStore.errors.questDtos &&
+              <p className="text-sm text-destructive mt-1">{taskStore.errors.questDtos}</p>}
+            {(taskStore.dataRequest.questDtos && taskStore.dataRequest.questDtos.length > 0) && (
               <div className="p-4 rounded-md border flex flex-col gap-2">
-                <div className="grid grid-cols-6 gap-2 bg-gray-50 p-2 rounded-md items-center">
-                  <p className="text-sm font-bold">Name</p>
+                <div className="grid grid-cols-8 gap-2 bg-gray-50 p-2 rounded-md items-center">
+                  <p className="text-sm font-bold">EventId</p>
                   <p className="text-sm font-bold">Period Type</p>
-                  <p className="text-sm font-bold">Weight</p>
-                  <p className="text-sm font-bold text-center">Is Activate?</p>
-                  <p className="text-sm font-bold text-center">Is Unlimited?</p>
+                  <p className="text-sm font-bold">Period Value</p>
+                  <p className="text-sm font-bold">Min Count</p>
+                  <p className="text-sm font-bold">Max Count</p>
+                  <p className="text-sm font-bold text-center">Continuous?</p>
+                  <p className="text-sm font-bold">Aggregate Type</p>
                   <p className="text-sm font-bold text-center">Action</p>
                 </div>
-                {(taskStore.dataRequest.rewardMaps).map((item, index) => (
+                {(taskStore.dataRequest.questDtos).map((item, index) => (
                   <div key={index}>
-                    <div className="grid grid-cols-6 gap-2 bg-gray-50 p-2 rounded-md cursor-pointer items-center">
+                    <div className="grid grid-cols-8 gap-2 bg-gray-50 p-2 rounded-md cursor-pointer items-center">
                       <span className="text-sm font-medium">
-                         {item.rewardName}
+                         {item.eventId}
                       </span>
                       <Select
                         name="schedule.periodType"
-                        value={item.periodType || ""}
-                        error={taskStore.errors[`rewardMaps[${index}].periodType`]}
+                        value={item.periodUnit || ""}
+                        error={taskStore.errors[`questDtos[${index}].periodType`]}
                         onValueChange={(value) =>
-                          item.periodType = value
+                          item.periodUnit = value
                         }>
                         <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Choose Type"/>
+                          <SelectValue placeholder="Choose Unit"/>
                         </SelectTrigger>
                         <SelectContent>
-                          {taskStore.periodTypes.map((period) => (
+                          {(taskStore.objectList['questPeriodUnit'] || []).map((period) => (
                             <SelectItem key={period} value={period}>{period}</SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                       <Input
-                  autoComplete="off"
-                        id="weight"
-                        name="weight"
+                        autoComplete="off"
+                        id="periodValue"
+                        name="periodValue"
                         type="number"
-                        value={item.weight || 0}
+                        value={item.periodValue || 0}
                         onChange={(e) => {
-                          item.weight = parseInt(e.target.value)
+                          item.periodValue = parseInt(e.target.value)
+                        }}
+                        placeholder="Enter"
+                      />
+                      <Input
+                        autoComplete="off"
+                        id="minCount"
+                        name="minCount"
+                        type="number"
+                        value={item.minCount || 0}
+                        onChange={(e) => {
+                          item.minCount = parseInt(e.target.value)
+                        }}
+                        placeholder="Enter"
+                      />
+                      <Input
+                        autoComplete="off"
+                        id="maxCount"
+                        name="maxCount"
+                        type="number"
+                        value={item.maxCount || 0}
+                        onChange={(e) => {
+                          item.maxCount = parseInt(e.target.value)
                         }}
                         placeholder="Enter"
                       />
                       <div className="flex items-center justify-center">
                         <SwitchWrapper>
-                          <Switch size={"sm"} checked={item.isActivate}
-                                  onCheckedChange={(checked) => item.isActivate = checked}/>
+                          <Switch size={"sm"} checked={item.continuous}
+                                  onCheckedChange={(checked) => item.continuous = checked}/>
                           <SwitchIndicator state="on"></SwitchIndicator>
                           <SwitchIndicator state="off"></SwitchIndicator>
                         </SwitchWrapper>
                       </div>
-                      <div className="flex items-center justify-center">
-                        <SwitchWrapper>
-                          <Switch size={"sm"} checked={item.isUnlimited}
-                                  onCheckedChange={(checked) => item.isUnlimited = checked}/>
-                          <SwitchIndicator state="on"></SwitchIndicator>
-                          <SwitchIndicator state="off"></SwitchIndicator>
-                        </SwitchWrapper>
-                      </div>
+                      <Select
+                        name="schedule.aggregateType"
+                        value={item.aggregateType || ""}
+                        error={taskStore.errors[`questDtos[${index}].aggregateType`]}
+                        onValueChange={(value) =>
+                          item.periodUnit = value
+                        }>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Choose Type"/>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={"SUM"}>SUM</SelectItem>
+                          <SelectItem value={"LAST"}>LAST</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <div className="flex items-center justify-center gap-2">
-                        <Button data-tooltip-id="app-tooltip"
-                                data-tooltip-content={"Add schedule"}
-                                variant={"primary"}
-                                size={"sm"} onClick={() => {
-                          item.poolRewardSchedules.push({
-                            poolRewardMapId: "",
-                            periodType: "",
-                            quantity: 0,
-                            startAt: new Date(),
-                            endAt: new Date(),
-                            state: ""
-                          })
-                        }}>
-                          <PlusIcon className="h-4 w-4"/>
-                        </Button>
                         <Button data-tooltip-id="app-tooltip"
                                 data-tooltip-content={"Delete reward"}
                                 variant={"danger"}
                                 size={"sm"} onClick={() => {
-                          taskStore.dataRequest.rewardMaps.splice(index, 1)
+                          taskStore.dataRequest.questDtos.splice(index, 1)
                         }}>
                           <Trash2 className="h-4 w-4"/>
                         </Button>
                       </div>
-                    </div>
-                    <div className="mt-2 mx-4">
-                      {item.poolRewardSchedules && item.poolRewardSchedules.length > 0 && (
-                        <div className="p-4 rounded-md border flex flex-col gap-2">
-                          <div className="grid grid-cols-6 gap-2 p-2 border rounded-md">
-                            <p className="font-medium text-sm">Period Type</p>
-                            <p className="font-medium text-sm">Quantity</p>
-                            <p className="font-medium text-sm">Start At</p>
-                            <p className="font-medium text-sm">End At</p>
-                            <p className="font-medium text-sm">State</p>
-                            <p className="font-medium text-sm text-center">Action</p>
-                          </div>
-                          {item.poolRewardSchedules.map((schedule, jndex) => (
-                            <div key={jndex}
-                                 className="grid grid-cols-6 gap-2 bg-gray-50 p-2 rounded-md cursor-pointer items-center">
-                              <Select
-                                name="schedule.periodType"
-                                value={schedule.periodType || ""}
-                                onValueChange={(value) =>
-                                  schedule.periodType = value
-                                }>
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Choose Type"/>
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {taskStore.periodTypeSchedule.map((period) => (
-                                    <SelectItem key={period} value={period}>{period}</SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <Input
-                  autoComplete="off"
-                                id="schedule.quantity"
-                                name="quantity"
-                                type="number"
-                                value={schedule.quantity || 0}
-                                onChange={(e) => {
-                                  schedule.quantity = parseInt(e.target.value)
-                                }}
-                                placeholder="Enter"
-                              />
-                              <DateTimePicker
-                                value={schedule.startAt}
-                                onChange={(dateTime) => {
-                                  schedule.startAt = dateTime ?? new Date();
-                                }}
-                              />
-                              <DateTimePicker
-                                value={schedule.endAt}
-                                onChange={(dateTime) => {
-                                  schedule.endAt = dateTime ?? new Date();
-                                }}
-                              />
-                              {/*<div className="flex items-baseline flex-wrap lg:flex-nowrap gap-2.5">*/}
-                              {/*  <Popover>*/}
-                              {/*    <PopoverTrigger asChild>*/}
-                              {/*      <Button*/}
-                              {/*        mode="input"*/}
-                              {/*        variant="outline"*/}
-                              {/*        id="date"*/}
-                              {/*        className={cn(*/}
-                              {/*          'w-full data-[state=open]:border-primary',*/}
-                              {/*          !schedule.startAt && 'text-muted-foreground',*/}
-                              {/*        )}*/}
-                              {/*      >*/}
-                              {/*        <CalendarDays className="-ms-0.5"/>*/}
-                              {/*        {schedule.startAt ? format(schedule.startAt, 'dd/MM/yyyy') :*/}
-                              {/*          <span>Pick a date</span>}*/}
-                              {/*      </Button>*/}
-                              {/*    </PopoverTrigger>*/}
-                              {/*    <PopoverContent className="w-auto p-0" align="start">*/}
-                              {/*      <Calendar*/}
-                              {/*        initialFocus*/}
-                              {/*        mode="single"*/}
-                              {/*        defaultMonth={schedule.startAt}*/}
-                              {/*        selected={schedule.startAt}*/}
-                              {/*        onSelect={(date) => schedule.startAt = date}*/}
-                              {/*        numberOfMonths={1}*/}
-                              {/*      />*/}
-                              {/*    </PopoverContent>*/}
-                              {/*  </Popover>*/}
-                              {/*</div>*/}
-                              {/*<div className="flex items-baseline flex-wrap lg:flex-nowrap gap-2.5">*/}
-                              {/*  <Popover>*/}
-                              {/*    <PopoverTrigger asChild>*/}
-                              {/*      <Button*/}
-                              {/*        mode="input"*/}
-                              {/*        variant="outline"*/}
-                              {/*        id="date"*/}
-                              {/*        className={cn(*/}
-                              {/*          'w-full data-[state=open]:border-primary',*/}
-                              {/*          !schedule.endAt && 'text-muted-foreground',*/}
-                              {/*        )}*/}
-                              {/*      >*/}
-                              {/*        <CalendarDays className="-ms-0.5"/>*/}
-                              {/*        {schedule.endAt ? format(schedule.endAt, 'dd/MM/yyyy') : <span>Pick a date</span>}*/}
-                              {/*      </Button>*/}
-                              {/*    </PopoverTrigger>*/}
-                              {/*    <PopoverContent className="w-auto p-0" align="start">*/}
-                              {/*      <Calendar*/}
-                              {/*        initialFocus*/}
-                              {/*        mode="single" // Single date selection*/}
-                              {/*        defaultMonth={schedule.endAt}*/}
-                              {/*        selected={schedule.endAt}*/}
-                              {/*        onSelect={(date) => schedule.endAt = date}*/}
-                              {/*        numberOfMonths={1}*/}
-                              {/*      />*/}
-                              {/*    </PopoverContent>*/}
-                              {/*  </Popover>*/}
-                              {/*</div>*/}
-                              <Select
-                                name="schedule.state"
-                                value={schedule.state || ""}
-                                onValueChange={(value) =>
-                                  schedule.state = value
-                                }>
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Choose State"/>
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value={"ACTIVE"}>Active</SelectItem>
-                                  <SelectItem value={"DISABLED"}>Disabled</SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <div className="flex items-center justify-center gap-2">
-                                <Button data-tooltip-id="app-tooltip"
-                                        data-tooltip-content={"Delete schedule"}
-                                        variant={"danger"}
-                                        size={"sm"} onClick={() => {
-                                  item.poolRewardSchedules.splice(jndex, 1)
-                                }}>
-                                  <Trash2 className="h-4 w-4"/>
-                                </Button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
                     </div>
                   </div>
                 ))}

@@ -112,7 +112,7 @@ class ConfigStore {
 }
 
 const configStore = new ConfigStore()
-export const useAuthStore = () => configStore
+export const useConfigStore = () => configStore
 
 export {ConfigStore}
 export default configStore

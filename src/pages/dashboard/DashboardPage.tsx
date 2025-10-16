@@ -128,7 +128,7 @@ const DashboardPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t("nav.dashboard")}</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">{t("nav.dashboard")}</h1>
           <CustomBreadcrumb
             items={[
               {label: 'Home', href: '/'},
@@ -160,7 +160,7 @@ const DashboardPage = observer(() => {
       {/*  })}*/}
       {/*</div>*/}
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <Tabs defaultValue={dashboardStore.tabActive}
               onValueChange={(value) => filterTab(value)}>
           <TabsList className="justify-between px-5" variant="line">
@@ -453,9 +453,9 @@ const DashboardPage = observer(() => {
       
       
       {/*<div className="grid grid-cols-1 lg:grid-cols-2 gap-6">*/}
-      {/*  <Card>*/}
+      {/*  <Card className="border-border shadow-sm">*/}
       {/*    <CardHeader>*/}
-      {/*      <CardTitle>{t("dashboard.quickActions")}</CardTitle>*/}
+      {/*      <CardTitle className="text-xl">{t("dashboard.quickActions")}</CardTitle>*/}
       {/*      <CardDescription>Common tasks and shortcuts</CardDescription>*/}
       {/*    </CardHeader>*/}
       {/*    <CardContent>*/}

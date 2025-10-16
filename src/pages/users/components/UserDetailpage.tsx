@@ -101,7 +101,7 @@ const UsersDetailPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t("users.userDetail")}</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">{t("users.userDetail")}</h1>
           <CustomBreadcrumb
             items={[
               {label: 'Home', href: '/'},
@@ -113,7 +113,7 @@ const UsersDetailPage = observer(() => {
       
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
           <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 px-2 py-4">
             <span className="text-sm">Username: <strong>{userStore.dataUser?.username}</strong></span>
@@ -185,7 +185,7 @@ const UsersDetailPage = observer(() => {
                 <div className="flex w-full">
                   <Popover open={isOpen} onOpenChange={setIsOpen}>
                     <PopoverTrigger asChild>
-                      <Button id="date" variant="outline" className="w-full">
+                      <Button id="date" variant="outline" className="w-full text-foreground">
                         <CalendarDays size={16} className="me-0.5"/>
                         {date?.from ? (
                           date.to ? (
@@ -211,7 +211,7 @@ const UsersDetailPage = observer(() => {
                         numberOfMonths={2}
                       />
                       <div className="flex items-center justify-end gap-1.5 border-t border-border p-3">
-                        <Button variant="outline" onClick={handleDateRangeReset}>
+                        <Button variant="outline" onClick={handleDateRangeReset} className="text-foreground">
                           Reset
                         </Button>
                         <Button onClick={handleDateRangeApply}>Apply</Button>

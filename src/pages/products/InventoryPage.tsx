@@ -11,9 +11,9 @@ const InventoryPage = () => {
         <p className="text-gray-600">Track and manage your inventory</p>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Inventory Management</CardTitle>
+          <CardTitle className="text-xl">Inventory Management</CardTitle>
           <CardDescription>This is a placeholder for the inventory page</CardDescription>
         </CardHeader>
         <CardContent>

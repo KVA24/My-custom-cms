@@ -9,6 +9,7 @@ import {Input} from "@/components/ui/input.tsx";
 import {useTranslation} from "react-i18next";
 import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue,} from '@/components/ui/select';
+import languageStore from "@/pages/languages/languageStore.ts";
 
 interface ModalProps {
   isOpen: boolean
@@ -109,7 +110,24 @@ const CrudModal = observer(({isOpen, type, onClose}: ModalProps) => {
         <DialogHeader>
           <DialogTitle className="text-xl font-semibold">{getTitle(type)}</DialogTitle>
           <DialogDescription className="text-muted-foreground">
-          
+            <div className="flex items-center justify-end w-1/4">
+              <Select
+                name="state"
+                value={languageStore.languageId}
+                onValueChange={(value) => {
+                  languageStore.languageId = value
+                  if (type === 'edit') itemStore.getDetail(itemStore.dataRequest?.id).then()
+                }}>
+                <SelectTrigger className="w-full" clearable={false}>
+                  <SelectValue placeholder="Choose Language"/>
+                </SelectTrigger>
+                <SelectContent>
+                  {(languageStore.listAll || []).map((item, index) => (
+                    <SelectItem value={item.id} key={index}>{item.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">

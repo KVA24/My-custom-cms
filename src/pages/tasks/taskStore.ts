@@ -1,72 +1,103 @@
-import {makeAutoObservable} from "mobx"
+import {makeAutoObservable, runInAction} from "mobx"
 import taskService from "./taskService.ts";
 import toastUtil from "@/lib/toastUtil.ts";
 import {format} from "date-fns";
 
 export interface DataList {
   id: string;
-  code: string;
-  fallbackPoolId: string;
-  state: string;
-  rewardMaps: RewardMap[]
-  version: number
-}
-
-export interface Schedule {
-  poolRewardMapId: string;
-  periodType: string;
-  quantity: number;
-  startAt: Date | undefined;
-  endAt: Date | undefined;
+  name: string;
+  taskCategory: string;
+  imageId: string;
+  isNoEndDate: boolean;
+  startDate: string;
+  endDate: string;
   state: string
 }
 
-export interface RewardMap {
+export interface QuestDto {
   id: string;
-  rewardId: string;
-  rewardName: string;
-  weight: number;
-  periodType: string
-  isActivate: boolean;
-  isUnlimited: boolean;
-  poolRewardSchedules: Schedule[]
+  name: string;
+  eventId: string;
+  periodValue: number;
+  periodUnit: string;
+  minCount: number;
+  maxCount: number;
+  continuous: boolean;
+  aggregateType: string;
 }
 
 export interface DataRequest {
   id: string;
-  code: string;
-  fallbackPoolId: string;
+  name: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  isNoEndDate: boolean;
+  periodValue: number;
+  periodUnit: string;
+  taskCategory: string;
+  isRecurring: boolean;
+  rewardAmount: number;
+  questDtos: QuestDto[];
+  slidingType: string;
+  deepLink: string;
+  description: string;
+  position: number;
+  imageId: string;
+  otpCode: string;
   state: string;
-  rewardMaps: RewardMap[];
-  poolBudgetId: string;
 }
+
+type StatisticKey =
+  | "periodUnit"
+  | "questPeriodUnit"
+  | "slidingType"
+  | "taskCategory"
 
 class TaskStore {
   isLoading: boolean = false
   isLoadingGet: boolean = false
   isLoadingBt: boolean = false
+  objectList: Partial<Record<StatisticKey, string[] | null>> = {};
+  loading: Record<StatisticKey, boolean> = {
+    periodUnit: false,
+    questPeriodUnit: false,
+    slidingType: false,
+    taskCategory: false,
+  }
   isOk: boolean = false
   page: number = 0
   size: number = 10
   totalPages: number = 0
   searchKey: string = ""
+  statusList: string[] = ["NEW", "REJECT", "ACTIVE", "INACTIVE", "COMPLETED", "DELETED"]
+  statusUpdate: string = ""
+  otpCode: string = ""
   id: string = ""
   errors: any = []
   lists: DataList[] = []
   dataRequest: DataRequest = {
     id: '',
-    code: '',
-    fallbackPoolId: '',
-    state: '',
-    rewardMaps: [],
-    poolBudgetId: ''
+    name: '',
+    startDate: new Date(),
+    endDate: new Date(),
+    isNoEndDate: false,
+    periodValue: 0,
+    periodUnit: '',
+    taskCategory: '',
+    isRecurring: false,
+    rewardAmount: 0,
+    questDtos: [],
+    slidingType: '',
+    deepLink: '',
+    description: '',
+    position: 0,
+    imageId: '',
+    otpCode: '',
+    state: ''
   }
-  periodTypes: string[] = ["ALL_THE_TIME", "UNLIMITED", "DAY", "WEEK", "MONTH"]
-  periodTypeSchedule: string[] = ["MINUTE", "HOUR", "DAY"]
-  listRewards: any = []
-  listBudgets: any = []
-  listFallbackPools: any = []
-  listRewardsSelected: any = []
+  listQuests: any = []
+  listQuestSelected: QuestDto[] = []
+  listSlidingType: string[] = []
   
   constructor() {
     makeAutoObservable(this)
@@ -75,14 +106,26 @@ class TaskStore {
   clearState = () => {
     this.dataRequest = {
       id: '',
-      code: '',
-      fallbackPoolId: '',
-      state: '',
-      rewardMaps: [],
-      poolBudgetId: ''
+      name: '',
+      startDate: new Date(),
+      endDate: new Date(),
+      isNoEndDate: false,
+      periodValue: 0,
+      periodUnit: '',
+      taskCategory: '',
+      isRecurring: false,
+      rewardAmount: 0,
+      questDtos: [],
+      slidingType: '',
+      deepLink: '',
+      description: '',
+      position: 0,
+      imageId: '',
+      otpCode: '',
+      state: ''
     }
     this.errors = []
-    this.listRewardsSelected = []
+    this.listQuestSelected = []
     this.searchKey = ""
   }
   
@@ -119,6 +162,41 @@ class TaskStore {
     }
   }
   
+  async fetchOne(
+    key: StatisticKey,
+    apiCall: () => Promise<{ success: boolean; data?: string[]; message?: string }>
+  ) {
+    this.loading[key] = true;
+    try {
+      const response = await apiCall();
+      runInAction(() => {
+        if (response.success) {
+          this.objectList[key] = response.data ?? null;
+        } else {
+          toastUtil.error(response.message || `Failed to fetch ${key}`);
+          this.objectList[key] = null;
+        }
+      });
+    } catch (e) {
+      runInAction(() => {
+        toastUtil.error(`Unexpected error in ${key}`);
+        this.objectList[key] = null;
+      });
+    } finally {
+      runInAction(() => {
+        this.loading[key] = false;
+      });
+    }
+  }
+  
+  callAllGet = async () => {
+    await Promise.allSettled([
+      this.fetchOne("periodUnit", taskService.getPeriodUnit),
+      this.fetchOne("questPeriodUnit", taskService.getQuestPeriodUnit),
+      this.fetchOne("taskCategory", taskService.getTaskCategory),
+    ]);
+  };
+  
   getList = async () => {
     this.isLoading = true
     const response = await taskService.getList()
@@ -142,51 +220,27 @@ class TaskStore {
       this.dataRequest = response.data
       this.dataRequest = {
         ...this.dataRequest,
-        rewardMaps: this.dataRequest.rewardMaps.map(reward => ({
-          ...reward,
-          poolRewardSchedules: reward.poolRewardSchedules ? reward.poolRewardSchedules.map(sch => ({
-            ...sch,
-            startAt: sch.startAt && new Date(sch.startAt),
-            endAt: sch.endAt && new Date(sch.endAt),
-          })) : []
-        }))
+        startDate: this.dataRequest.startDate ? new Date(this.dataRequest.startDate) : null,
+        endDate: this.dataRequest.endDate ? new Date(this.dataRequest.endDate) : null,
       }
     } else {
       toastUtil.error(response.message || "Failed to fetch")
     }
   }
   
-  getListRewards = async () => {
-    this.isLoadingGet = true
-    const response = await taskService.getListRewards()
-    this.isLoadingGet = false
-    
+  getAllEvent = async () => {
+    const response = await taskService.getAllEvent()
     if (response.success) {
-      this.listRewards = response.data
+      this.listQuests = response.data
     } else {
       toastUtil.error(response.message || "Failed to fetch")
     }
   }
   
-  getListBudget = async () => {
-    this.isLoadingGet = true
-    const response = await taskService.getListBudget()
-    this.isLoadingGet = false
-    
+  getSlidingType = async () => {
+    const response = await taskService.getSlidingType()
     if (response.success) {
-      this.listBudgets = response.data
-    } else {
-      toastUtil.error(response.message || "Failed to fetch")
-    }
-  }
-  
-  getListFallbackPool = async () => {
-    this.isLoadingGet = true
-    const response = await taskService.getListFallbackPool()
-    this.isLoadingGet = false
-    
-    if (response.success) {
-      this.listFallbackPools = response.data
+      this.listSlidingType = response.data
     } else {
       toastUtil.error(response.message || "Failed to fetch")
     }
@@ -194,36 +248,32 @@ class TaskStore {
   
   create = async () => {
     const data: DataRequest | null = this.dataRequest
-    
     const formattedData = {
       ...data,
-      rewardMaps: data.rewardMaps.map(reward => ({
-        ...reward,
-        poolRewardSchedules: reward.poolRewardSchedules.map(sch => ({
-          ...sch,
-          startAt: sch.startAt && format(sch.startAt, "yyyy-MM-dd HH:mm"),
-          endAt: sch.endAt && format(sch.endAt, "yyyy-MM-dd HH:mm"),
-        }))
-      }))
+      startDate: data.startDate && format(data.startDate, "yyyy-MM-dd"),
+      endDate: data.endDate && format(data.endDate, "yyyy-MM-dd"),
     }
     await this.handleRequest(() => taskService.create(formattedData), "Created", false);
   }
   
   update = async () => {
     const data: DataRequest | null = this.dataRequest
-    
     const formattedData = {
       ...data,
-      rewardMaps: data.rewardMaps.map(reward => ({
-        ...reward,
-        poolRewardSchedules: reward.poolRewardSchedules.map(sch => ({
-          ...sch,
-          startAt: sch.startAt && format(sch.startAt, "yyyy-MM-dd HH:mm"),
-          endAt: sch.endAt && format(sch.endAt, "yyyy-MM-dd HH:mm"),
-        }))
-      }))
+      startDate: data.startDate && format(data.startDate, "yyyy-MM-dd"),
+      endDate: data.endDate && format(data.endDate, "yyyy-MM-dd"),
     }
     await this.handleRequest(() => taskService.update(data.id, formattedData), "Updated", false);
+  }
+  
+  updateStatus = async () => {
+    const result = await taskService.updateState(this.id, this.statusUpdate)
+    if (result.success) {
+      toastUtil.success("Updated")
+      await this.getList()
+    } else {
+      toastUtil.error(result.message || "Failed to update")
+    }
   }
   
   delete = async () =>
@@ -231,7 +281,7 @@ class TaskStore {
 }
 
 const taskStore = new TaskStore()
-export const useAuthStore = () => taskStore
+export const useTaskStore = () => taskStore
 
 export {TaskStore}
 export default taskStore

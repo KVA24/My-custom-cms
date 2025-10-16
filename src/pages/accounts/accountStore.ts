@@ -38,10 +38,10 @@ class AccountStore {
   };
   qrCode = "";
   otpCode = ""
-  listRole: {value: string, label: string}[] = [
-    { value: "ADMIN", label: "Admin" },
-    { value: "OPERATOR", label: "Operator" },
-    {value: "CC", label: "CC" }
+  listRole: { value: string, label: string }[] = [
+    {value: "ADMIN", label: "Admin"},
+    {value: "OPERATOR", label: "Operator"},
+    {value: "CC", label: "CC"}
   ];
   
   constructor() {

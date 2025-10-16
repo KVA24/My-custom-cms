@@ -231,7 +231,7 @@ class PoolStore {
 }
 
 const poolStore = new PoolStore()
-export const useAuthStore = () => poolStore
+export const usePoolStore = () => poolStore
 
 export {PoolStore}
 export default poolStore

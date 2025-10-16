@@ -17,6 +17,185 @@
   
   body {
     font-family: var(--font-custom), sans-serif;
+    @apply bg-background text-foreground antialiased;
+  }
+  
+  /* Added smooth transitions for theme switching */
+  * {
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Custom scrollbar for modern look */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/20 rounded-full;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/30;
+  }
+}
+
+@layer components {
+  table {
+    @apply w-full border-collapse;
+  }
+  
+  table thead {
+    @apply border-b border-border;
+  }
+  
+  table thead tr {
+    @apply bg-muted/30;
+  }
+  
+  table thead th {
+    @apply px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider;
+  }
+  
+  table tbody tr {
+    @apply border-b border-border transition-colors duration-150;
+  }
+  
+  table tbody tr:hover {
+    @apply bg-muted/50 cursor-pointer;
+  }
+  
+  table tbody tr:last-child {
+    @apply border-b-0;
+  }
+  
+  table tbody td {
+    @apply px-4 py-4 text-sm;
+  }
+  
+  /* Modern card hover effects */
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-lg hover:scale-[1.01];
+  }
+  
+  /* Smooth fade-in animation */
+  .fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Skeleton loading animation */
+  .skeleton {
+    @apply animate-pulse bg-muted rounded relative;
+  }
+  
+  /* ✅ Updated shimmer effect for smoother light sweep */
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.25),
+      transparent
+    );
+    animation: shimmer 1.6s ease-in-out infinite;
+  }
+  
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+  
+  /* Dark mode tweak: dimmer shimmer light */
+  .dark .shimmer::after {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.1),
+      transparent
+    );
+  }
+}
+
+/* Added utility classes for new colors */
+@layer utilities {
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .bg-gradient-success {
+    background: var(--gradient-success);
+  }
+  
+  .bg-gradient-warning {
+    background: var(--gradient-warning);
+  }
+  
+  .text-success {
+    color: var(--success);
+  }
+  
+  .text-warning {
+    color: var(--warning);
+  }
+  
+  .text-info {
+    color: var(--info);
+  }
+  
+  .bg-success {
+    background-color: var(--success);
+  }
+  
+  .bg-warning {
+    background-color: var(--warning);
+  }
+  
+  .bg-info {
+    background-color: var(--info);
+  }
+  
+  .border-success {
+    border-color: var(--success);
+  }
+  
+  .border-warning {
+    border-color: var(--warning);
+  }
+  
+  .border-info {
+    border-color: var(--info);
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Smooth transitions */
+  .transition-smooth {
+    @apply transition-all duration-200 ease-in-out;
   }
 }
 
@@ -33,3 +212,5 @@
 /** Dark/Light Theme Variant **/
 @custom-variant dark (&:is(.dark *));
 @custom-variant light (&:not(.dark *));
+
+

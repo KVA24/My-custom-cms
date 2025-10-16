@@ -13,6 +13,7 @@ import AccountsPage from "@/pages/accounts/AccountsPage";
 import UsersPage from "@/pages/users/UsersPage"
 import UsersDetailPage from "@/pages/users/components/UserDetailpage.tsx";
 import ConfigsPage from "@/pages/configs/ConfigsPage";
+import LanguagePage from "@/pages/languages/LanguagePage.tsx";
 import WelcomePage from "@/components/layout/welcome/WelcomePage";
 import ItemsPage from "@/pages/items/ItemsPage.tsx";
 import ItemStorePage from "@/pages/itemStores/ItemStorePage.tsx";
@@ -32,6 +33,7 @@ import EditEvent from "@/pages/events/components/EditEvent.tsx";
 import TaskPage from "@/pages/tasks/TaskPage.tsx";
 import CreateTask from "@/pages/tasks/components/CreateTask.tsx";
 import EditTask from "@/pages/tasks/components/EditTask.tsx";
+import QuizPage from "@/pages/quiz/QuizPage.tsx";
 
 const AllRoutes = observer(() => {
   const navigationStore = useNavigationStore()
@@ -41,7 +43,7 @@ const AllRoutes = observer(() => {
       {/* Mobile sidebar overlay */}
       {navigationStore.mobileSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-white opacity-50 z-40 lg:hidden"
           onClick={() => navigationStore.closeMobileSidebar()}
         />
       )}
@@ -85,8 +87,10 @@ const AllRoutes = observer(() => {
               <Route path="/tasks" element={<TaskPage/>}/>
               <Route path="/tasks/create" element={<CreateTask/>}/>
               <Route path="/tasks/edit/:id" element={<EditTask/>}/>
+              <Route path="/quiz" element={<QuizPage/>}/>
               <Route path="/transaction" element={<TransactionPage/>}/>
               <Route path="/configs" element={<ConfigsPage/>}/>
+              <Route path="/languages" element={<LanguagePage/>}/>
               <Route path="/activityLogs" element={<ActivityLogsPage/>}/>
               <Route path="*" element={<NotFoundPage/>}/>
               

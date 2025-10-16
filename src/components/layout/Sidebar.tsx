@@ -6,8 +6,8 @@ import {observer} from "mobx-react-lite"
 import {type MenuItem, useNavigationStore} from "@/stores/navigationStore"
 import {cn} from "@/lib/utils"
 import {useEffect, useState} from "react"
-import {ChevronDown, ChevronRight, Menu,} from "lucide-react"
-import authStore from "@/pages/auth/authStore.ts";
+import {ChevronDown, ChevronRight, Menu} from "lucide-react"
+import authStore from "@/pages/auth/authStore.ts"
 
 const Sidebar = observer(() => {
   const {t} = useTranslation()
@@ -17,7 +17,7 @@ const Sidebar = observer(() => {
   
   useEffect(() => {
     navigationStore.menuItems = navigationStore.getMenuItems(authStore.user?.role || "ADMIN")
-  }, []);
+  }, [])
   
   useEffect(() => {
     const chain = navigationStore.findParentChain(location.pathname)
@@ -46,7 +46,7 @@ const Sidebar = observer(() => {
       
       return (
         <div
-          className="absolute left-full ml-2 z-50 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-2 min-w-48"
+          className="absolute left-full ml-2 z-50 bg-card/95 backdrop-blur-sm border border-border rounded-lg shadow-lg py-2 min-w-48 fade-in"
           onMouseEnter={() => setHoveredItem(item.id)}
           onMouseLeave={() => setHoveredItem(null)}
         >
@@ -73,7 +73,7 @@ const Sidebar = observer(() => {
           {/* Children items */}
           {hasChildren && item.children && (
             <>
-              <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+              <div className="border-t border-border my-1"></div>
               {item.children.map((child) => {
                 const ChildIcon = child.icon
                 return (
@@ -99,7 +99,7 @@ const Sidebar = observer(() => {
                     
                     {/* Grandchildren items */}
                     {child.children && child.children.length > 0 && (
-                      <div style={{ paddingLeft: `${16 + level * 16}px` }}>
+                      <div style={{paddingLeft: `${16 + level * 16}px`}}>
                         {child.children.map((grandChild) => (
                           <Link
                             key={grandChild.id}
@@ -135,15 +135,16 @@ const Sidebar = observer(() => {
             onMouseEnter={() => navigationStore.sidebarCollapsed && setHoveredItem(item.id)}
             onMouseLeave={() => !navigationStore.sidebarCollapsed && setHoveredItem(null)}
             className={cn(
-              "flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors relative text-gray-600 dark:text-white",
-              "hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100",
-              isActive && "bg-blue-100 text-blue-700 border-r-2 border-blue-700 dark:bg-blue-900 dark:text-white",
+              "flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-smooth relative group",
+              "hover:bg-accent",
+              isActive && "bg-primary/10 text-primary border-l-2 border-primary",
+              !isActive && "text-foreground/80 hover:text-foreground",
               !navigationStore.sidebarCollapsed && level > 0 && "ml-4",
               navigationStore.sidebarCollapsed && "justify-center px-2",
             )}
             style={{paddingLeft: navigationStore.sidebarCollapsed ? undefined : `${16 + level * 16}px`}}
           >
-            <Icon className="h-5 w-5 shrink-0"/>
+            <Icon className={cn("h-5 w-5 shrink-0", isActive && "text-primary")}/>
             {!navigationStore.sidebarCollapsed && (
               <>
                 <span className="ml-3">{t(item.label)}</span>
@@ -154,6 +155,9 @@ const Sidebar = observer(() => {
                 )}
               </>
             )}
+            {isActive && (
+              <div className="absolute right-0.5 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full"/>
+            )}
           </Link>
         ) : (
           <button
@@ -161,8 +165,8 @@ const Sidebar = observer(() => {
             onMouseEnter={() => navigationStore.sidebarCollapsed && setHoveredItem(item.id)}
             onMouseLeave={() => !navigationStore.sidebarCollapsed && setHoveredItem(null)}
             className={cn(
-              "w-full flex items-center px-4 py-2 text-sm font-medium rounded-lg transition-colors relative dark:text-white",
-              "hover:bg-gray-100 hover:text-gray-900 dark:hover:bg-gray-700 dark:hover:text-gray-100 text-left",
+              "w-full flex items-center px-4 py-2.5 text-sm font-medium rounded-lg transition-smooth text-left",
+              "hover:bg-accent text-foreground/80 hover:text-foreground",
               navigationStore.sidebarCollapsed && "justify-center px-2",
             )}
             style={{paddingLeft: navigationStore.sidebarCollapsed ? undefined : `${16 + level * 16}px`}}
@@ -183,8 +187,9 @@ const Sidebar = observer(() => {
         {renderPopoverMenu()}
         
         {hasChildren && isExpanded && !navigationStore.sidebarCollapsed && (
-          <div
-            className="mt-1 flex flex-col gap-1">{item.children?.map((child) => renderMenuItem(child, level + 1))}</div>
+          <div className="mt-1 flex flex-col gap-1">
+            {item.children?.map((child) => renderMenuItem(child, level + 1))}
+          </div>
         )}
       </div>
     )
@@ -193,27 +198,31 @@ const Sidebar = observer(() => {
   return (
     <div
       className={cn(
-        "bg-white dark:bg-gray-800 shadow-lg transition-all duration-300 ease-in-out border-r border-gray-200 dark:border-gray-700 h-full",
+        "bg-card/95 backdrop-blur-sm shadow-lg transition-all duration-300 ease-in-out border-r border-border h-full",
         navigationStore.sidebarCollapsed ? "w-16" : "w-64",
       )}
     >
-      <div className={cn(
-        "flex items-center p-2 px-4 border-b border-gray-200 dark:border-gray-700",
-        navigationStore.sidebarCollapsed ? "justify-center" : "justify-between",
-      )}>
+      <div
+        className={cn(
+          "flex items-center px-4 py-2 border-b border-border",
+          navigationStore.sidebarCollapsed ? "justify-center" : "justify-between",
+        )}
+      >
         {!navigationStore.sidebarCollapsed && (
-          <h1 className="text-xl font-bold text-gray-800 dark:text-white">LTM Vali CMS</h1>
+          <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            LTM Vali CMS
+          </h1>
         )}
         <button
           onClick={() => navigationStore.toggleSidebar()}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-white"
+          className="p-2 rounded-lg hover:bg-accent transition-smooth"
         >
-          <Menu className="h-5 w-5"/>
+          <Menu className="h-5 w-5 text-foreground"/>
         </button>
       </div>
       
       <nav className="mt-6 px-3">
-        <div className="flex flex-col gap-2">{navigationStore.menuItems.map((item) => renderMenuItem(item))}</div>
+        <div className="flex flex-col gap-1">{navigationStore.menuItems.map((item) => renderMenuItem(item))}</div>
       </nav>
     </div>
   )

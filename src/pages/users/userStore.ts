@@ -166,7 +166,7 @@ class UserStore {
 }
 
 const userStore = new UserStore()
-export const useAuthStore = () => userStore
+export const useuserStore = () => userStore
 
 export {UserStore}
 export default userStore

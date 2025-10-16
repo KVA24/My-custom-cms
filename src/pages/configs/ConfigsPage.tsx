@@ -8,9 +8,9 @@ import {Edit, Plus, Trash2} from "lucide-react"
 import CrudModal from "./CrudModal.tsx";
 import configStore from "./configStore.ts";
 import {observer} from "mobx-react-lite";
-import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import CustomPagination from "@/components/common/CustomPagination.tsx";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb.tsx";
+import TableSkeleton from "@/components/common/TableSkeleton.tsx";
 
 interface User {
   id: string
@@ -57,11 +57,11 @@ const ConfigsPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t("configs.title")}</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">{t("configs.title")}</h1>
           <CustomBreadcrumb
             items={[
-              { label: 'Home', href: '/' },
-              { label: 'Configs', isCurrent: true },
+              {label: 'Home', href: '/'},
+              {label: 'Configs', isCurrent: true},
             ]}
           />
         </div>
@@ -77,9 +77,9 @@ const ConfigsPage = observer(() => {
         </Button>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>{t("configs.list")}</CardTitle>
+          <CardTitle className="text-xl">{t("configs.list")}</CardTitle>
           <CardDescription>{t("configs.description")}</CardDescription>
         </CardHeader>
         <CardContent>
@@ -100,9 +100,7 @@ const ConfigsPage = observer(() => {
           {/*  </div>*/}
           {/*</div>*/}
           {configStore.isLoading ?
-            <div className="w-full flex justify-center">
-              <LoadingSpinner size={"md"}/>
-            </div>
+            <TableSkeleton rows={5} columns={3}/>
             :
             <Fragment>
               <div className="overflow-x-auto">

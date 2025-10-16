@@ -4,7 +4,6 @@ import React, {Fragment, useEffect} from "react"
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx"
 import leaderboardStore from "./leaderboardStore.ts";
 import {observer} from "mobx-react-lite";
-import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb.tsx";
 import {addWeeks, endOfWeek, endOfYear, format, isBefore, isWithinInterval, startOfWeek, startOfYear} from "date-fns";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
@@ -14,6 +13,7 @@ import {Input} from "@/components/ui/input.tsx";
 import {useTranslation} from "react-i18next";
 import SimplePagination from "@/components/common/SimplePagination.tsx";
 import {Button} from "@/components/ui/button.tsx";
+import TableSkeleton from "@/components/common/TableSkeleton.tsx";
 
 const LeaderboardPage = observer(() => {
   const {t} = useTranslation()
@@ -95,7 +95,7 @@ const LeaderboardPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Leaderboard</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">Leaderboard</h1>
           <CustomBreadcrumb
             items={[
               {label: 'Home', href: '/'},
@@ -105,9 +105,9 @@ const LeaderboardPage = observer(() => {
         </div>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Leaderboard list</CardTitle>
+          <CardTitle className="text-xl">Leaderboard list</CardTitle>
         </CardHeader>
         <CardContent>
           <div
@@ -168,9 +168,7 @@ const LeaderboardPage = observer(() => {
             </div>
           </div>
           {leaderboardStore.isLoading ?
-            <div className="w-full flex justify-center">
-              <LoadingSpinner size={"md"}/>
-            </div>
+            <TableSkeleton rows={5} columns={3}/>
             :
             <Fragment>
               <div className="overflow-x-auto">

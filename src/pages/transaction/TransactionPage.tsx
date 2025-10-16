@@ -109,7 +109,7 @@ const TransactionPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Transaction</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">Transaction</h1>
           <CustomBreadcrumb
             items={[
               {label: 'Home', href: '/'},
@@ -120,7 +120,7 @@ const TransactionPage = observer(() => {
       
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <Tabs defaultValue={transactionStore.tabActive}
               onValueChange={(value) => filterTab(value)}>
           <TabsList className="justify-between px-5 mb-2.5" variant="line">
@@ -279,7 +279,7 @@ const TransactionPage = observer(() => {
               <div className="flex w-full">
                 <Popover open={isOpen} onOpenChange={setIsOpen}>
                   <PopoverTrigger asChild>
-                    <Button id="date" variant="outline" className="w-full">
+                    <Button id="date" variant="outline" className="w-full text-foreground">
                       <CalendarDays size={16} className="me-0.5"/>
                       {date?.from ? (
                         date.to ? (
@@ -305,7 +305,7 @@ const TransactionPage = observer(() => {
                       numberOfMonths={2}
                     />
                     <div className="flex items-center justify-end gap-1.5 border-t border-border p-3">
-                      <Button variant="outline" onClick={handleDateRangeReset}>
+                      <Button variant="outline" onClick={handleDateRangeReset} className="text-foreground">
                         Reset
                       </Button>
                       <Button onClick={handleDateRangeApply}>Apply</Button>

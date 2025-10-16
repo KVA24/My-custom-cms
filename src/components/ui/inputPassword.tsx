@@ -14,7 +14,7 @@ export function InputPassword({
   return (
     <div className="relative">
       <Input
-                  autoComplete="off"
+        autoComplete="off"
         {...props}
         name={name}
         type={show ? 'text' : 'password'}

@@ -55,7 +55,7 @@ function PaginationLink({
 function PaginationPrevious({className, ...props}: React.ComponentProps<typeof Link>) {
   return (
     <PaginationLink aria-label="Go to previous page" className={className} {...props}>
-      <ChevronLeft className="h-4 w-4"/>
+      <ChevronLeft className="h-4 w-4 text-foreground"/>
     </PaginationLink>
   );
 }

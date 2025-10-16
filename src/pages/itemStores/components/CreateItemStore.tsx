@@ -69,7 +69,7 @@ const CreateItemStore = observer(() => {
           {label: 'Create Item Store', isCurrent: true},
         ]}
       />
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader className="flex items-center justify-start gap-2">
           <Button
             variant="secondary"
@@ -78,7 +78,7 @@ const CreateItemStore = observer(() => {
             data-tooltip-content={t("common.back")}
             onClick={handleBack}
           >
-            <ChevronLeft className="h-4 w-4"/>
+            <ChevronLeft className="h-4 w-4 text-foreground"/>
           </Button>
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Create Item Store</h1>
         </CardHeader>
@@ -89,7 +89,7 @@ const CreateItemStore = observer(() => {
                 Name <span className="text-red-500">*</span>
               </Label>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 id="name"
                 name="name"
                 type="text"
@@ -104,7 +104,7 @@ const CreateItemStore = observer(() => {
                 ServiceId <span className="text-red-500">*</span>
               </Label>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 id="serviceId"
                 name="serviceId"
                 type="text"
@@ -164,7 +164,7 @@ const CreateItemStore = observer(() => {
                 Price <span className="text-red-500">*</span>
               </Label>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 id="price"
                 name="price"
                 type="number"
@@ -179,7 +179,7 @@ const CreateItemStore = observer(() => {
                 Price Converted<span className="text-red-500">*</span>
               </Label>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 id="convertedPrice"
                 name="convertedPrice"
                 type="number"
@@ -240,7 +240,7 @@ const CreateItemStore = observer(() => {
                 Display Order<span className="text-red-500">*</span>
               </Label>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 id="displayOrder"
                 name="displayOrder"
                 type="number"
@@ -279,7 +279,7 @@ const CreateItemStore = observer(() => {
                        {item.name} - {item.code}
                     </span>
                     <Input
-                  autoComplete="off"
+                      autoComplete="off"
                       id="quantity"
                       name="quantity"
                       type="number"
@@ -290,7 +290,7 @@ const CreateItemStore = observer(() => {
                       placeholder="Enter"
                     />
                     <Input
-                  autoComplete="off"
+                      autoComplete="off"
                       id="unitPrice"
                       name="unitPrice"
                       type="number"
@@ -301,7 +301,7 @@ const CreateItemStore = observer(() => {
                       placeholder="Enter"
                     />
                     <Input
-                  autoComplete="off"
+                      autoComplete="off"
                       id="displayOrder"
                       name="displayOrder"
                       type="number"

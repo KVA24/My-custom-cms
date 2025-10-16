@@ -129,7 +129,7 @@ function Input({
                  mask,
                  ...props
                }: InputProps) {
-  return <div>
+  return <div className="w-full">
     {mask ? (
       <InputMask
         mask={mask}

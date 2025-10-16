@@ -45,7 +45,7 @@ class ItemStore {
     convertRate: 0,
   }
   listType: string[] = ["DIAMOND", "TURN_FREE", "TURN_PAID", "HAMMER", "MIX", "MB", "JACKFRUIT", "POINT", "JACKPOT"]
-  listSourceType: string[] = ["EXTERNAL", "GAME"]
+  listSourceType: string[] = ["GAME_VALI", "GAME_QUIZ_QUESTION", "EXTERNAL"]
   
   constructor() {
     makeAutoObservable(this)

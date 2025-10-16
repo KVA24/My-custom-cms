@@ -135,7 +135,7 @@ class BudgetStore {
 }
 
 const budgetStore = new BudgetStore()
-export const useAuthStore = () => budgetStore
+export const useBudgetStore = () => budgetStore
 
 export {BudgetStore}
 export default budgetStore

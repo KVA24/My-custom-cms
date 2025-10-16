@@ -5,15 +5,16 @@ import {useTranslation} from "react-i18next"
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx"
 import {Button} from "@/components/ui/button.tsx"
 import {Input} from "@/components/ui/input.tsx"
-import {Edit, Plus, Search, Trash2} from "lucide-react"
+import {Edit, Plus, RotateCcw, Search, Trash2, XIcon} from "lucide-react"
 import CrudModal from "./components/CrudModal.tsx";
 import taskStore from "./taskStore.ts";
 import {observer} from "mobx-react-lite";
-import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import CustomPagination from "@/components/common/CustomPagination.tsx";
 import {useNavigate} from "react-router-dom";
-import BadgeRender from "@/components/common/BadgeRender.tsx";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb.tsx";
+import {format} from "date-fns";
+import BadgeRender from "@/components/common/BadgeRender.tsx";
+import TableSkeleton from "@/components/common/TableSkeleton.tsx";
 
 interface User {
   id: string
@@ -29,16 +30,16 @@ const TaskPage = observer(() => {
   const {t} = useTranslation()
   const [searchTerm, setSearchTerm] = useState("")
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [typeModal, setType] = useState<"create" | "edit" | "delete">("create")
+  const [typeModal, setType] = useState<"create" | "edit" | "delete" | "updateState">("create")
   const navigate = useNavigate()
   
   function handleCreate() {
     taskStore.clearState()
-    navigate("/cms/pool/create")
+    navigate("/cms/tasks/create")
   }
   
   function handleEdit(id: string) {
-    navigate(`/cms/pool/edit/${id}`)
+    navigate(`/cms/tasks/edit/${id}`)
   }
   
   useEffect(() => {
@@ -71,11 +72,11 @@ const TaskPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Pools</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">Tasks</h1>
           <CustomBreadcrumb
             items={[
               {label: 'Home', href: '/'},
-              {label: 'Pools', isCurrent: true},
+              {label: 'Tasks', isCurrent: true},
             ]}
           />
         </div>
@@ -87,9 +88,9 @@ const TaskPage = observer(() => {
         </Button>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Pools List</CardTitle>
+          <CardTitle className="text-xl">Tasks List</CardTitle>
         </CardHeader>
         <CardContent>
           <div
@@ -97,7 +98,7 @@ const TaskPage = observer(() => {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"/>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 placeholder={t("common.search")}
                 value={taskStore.searchKey}
                 onChange={(e) => taskStore.searchKey = e.target.value}
@@ -109,9 +110,7 @@ const TaskPage = observer(() => {
             </div>
           </div>
           {taskStore.isLoading ?
-            <div className="w-full flex justify-center">
-              <LoadingSpinner size={"md"}/>
-            </div>
+            <TableSkeleton rows={5} columns={3}/>
             :
             <Fragment>
               <div className="overflow-x-auto">
@@ -119,7 +118,9 @@ const TaskPage = observer(() => {
                   <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Start</th>
+                    <th>End</th>
                     <th>Status</th>
                     <th>Action</th>
                   </tr>
@@ -134,13 +135,33 @@ const TaskPage = observer(() => {
                         {item.id}
                       </td>
                       <td>
-                        {item.code}
+                        {item.name}
+                      </td>
+                      <td>
+                        {format(item.startDate, "dd/MM/yyyy")}
+                      </td>
+                      <td>
+                        {item.isNoEndDate ? <XIcon/> : format(item.startDate, "dd/MM/yyyy")}
                       </td>
                       <td>
                         <BadgeRender status={item.state}/>
                       </td>
                       <td>
                         <div className="flex items-center gap-2">
+                          <Button
+                            variant="warning"
+                            size="sm"
+                            data-tooltip-id="app-tooltip"
+                            data-tooltip-content={t("common.updateState")}
+                            loading={taskStore.isLoadingGet}
+                            onClick={() => {
+                              taskStore.id = item.id
+                              setType("updateState")
+                              setIsModalOpen(true)
+                            }}
+                          >
+                            <RotateCcw className="h-4 w-4"/>
+                          </Button>
                           <Button
                             variant="primary"
                             size="sm"

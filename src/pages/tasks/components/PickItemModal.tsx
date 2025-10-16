@@ -8,7 +8,7 @@ import {
   DialogTitle
 } from "@/components/ui/dialog.tsx"
 import React from "react";
-import taskStore, {RewardMap} from "../taskStore.ts";
+import taskStore, {QuestDto} from "../taskStore.ts";
 import {Button} from "@/components/ui/button.tsx";
 import {useTranslation} from "react-i18next";
 import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
@@ -24,12 +24,12 @@ const PickItemModal = observer(({isOpen, onClose}: ModalProps) => {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    taskStore.dataRequest.rewardMaps = [...taskStore.listRewardsSelected]
+    taskStore.dataRequest.questDtos = [...taskStore.listQuestSelected]
     onClose()
   }
   
   function hasId(items: any[], id: string): boolean {
-    return items.some((item) => item.rewardId === id);
+    return items.some((item) => item.eventId === id);
   }
   
   return (
@@ -42,27 +42,29 @@ const PickItemModal = observer(({isOpen, onClose}: ModalProps) => {
           </DialogDescription>
         </DialogHeader>
         <div className="py-4 flex flex-col gap-2 max-h-[50vh] overflow-y-auto">
-          {(taskStore.listRewards || []).map((item: RewardMap) => (
+          {(taskStore.listQuests || []).map((item: QuestDto) => (
             <button key={item.id} onClick={() => {
-              if (hasId(taskStore.listRewardsSelected || [], item.id)) {
-                taskStore.listRewardsSelected = taskStore.listRewardsSelected.filter((i) => i.id !== item.id)
+              if (hasId(taskStore.listQuestSelected || [], item.id)) {
+                taskStore.listQuestSelected = taskStore.listQuestSelected.filter((i) => i.id !== item.id)
               } else {
-                taskStore.listRewardsSelected.push({
+                taskStore.listQuestSelected.push({
                   ...item,
-                  rewardId: item.id,
-                  periodType: "",
-                  weight: 0,
-                  isActivate: false,
-                  isUnlimited: false,
-                  poolRewardSchedules: []
+                  id: item.id,
+                  eventId: item.id,
+                  periodUnit: '',
+                  periodValue: 0,
+                  minCount: 0,
+                  maxCount: 0,
+                  continuous: false,
+                  aggregateType: ''
                 })
               }
             }}
                     className="w-full flex items-center justify-between bg-gray-50 p-2 rounded-md cursor-pointer hover:bg-primary hover:text-white">
               <span className="text-sm font-medium">
-                 {item.rewardName}
+                 {item.name}
               </span>
-              {hasId(taskStore.listRewardsSelected || [], item.id) && (
+              {hasId(taskStore.listQuestSelected || [], item.id) && (
                 <CheckIcon size={16}/>
               )}
             </button>

@@ -4,15 +4,14 @@ import React, {Fragment, useEffect, useState} from "react"
 import {useTranslation} from "react-i18next"
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx"
 import {Button} from "@/components/ui/button.tsx"
-import {Input} from "@/components/ui/input.tsx"
-import {Edit, Plus, Search, Trash2, Undo2Icon} from "lucide-react"
+import {Edit, Plus, Trash2, Undo2Icon} from "lucide-react"
 import CrudModal from "./components/CrudModal.tsx";
 import budgetStore from "./budgetStore.ts";
 import {observer} from "mobx-react-lite";
-import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import CustomPagination from "@/components/common/CustomPagination.tsx";
 import {numberFormat} from "@/lib/utils.ts";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb.tsx";
+import TableSkeleton from "@/components/common/TableSkeleton.tsx";
 
 interface User {
   id: string
@@ -76,7 +75,7 @@ const PoolBudgetPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Pool Budget</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">Pool Budget</h1>
           <CustomBreadcrumb
             items={[
               {label: 'Home', href: '/'},
@@ -92,9 +91,9 @@ const PoolBudgetPage = observer(() => {
         </Button>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Pool Budget List</CardTitle>
+          <CardTitle className="text-xl">Pool Budget List</CardTitle>
         </CardHeader>
         <CardContent>
           {/*<div*/}
@@ -114,9 +113,7 @@ const PoolBudgetPage = observer(() => {
           {/*  </div>*/}
           {/*</div>*/}
           {budgetStore.isLoading ?
-            <div className="w-full flex justify-center">
-              <LoadingSpinner size={"md"}/>
-            </div>
+            <TableSkeleton rows={5} columns={3}/>
             :
             <Fragment>
               <div className="overflow-x-auto">

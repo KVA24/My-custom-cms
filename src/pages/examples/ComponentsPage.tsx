@@ -160,14 +160,14 @@ const ComponentsPage = () => {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t("components.title")}</h1>
+        <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">{t("components.title")}</h1>
         <p className="text-gray-600 dark:text-gray-400">{t("components.subtitle")}</p>
       </div>
       
       {/* Form Components */}
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>{t("components.formComponents")}</CardTitle>
+          <CardTitle className="text-xl">{t("components.formComponents")}</CardTitle>
           <CardDescription>{t("components.formComponentsDescription")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-6">
@@ -175,7 +175,7 @@ const ComponentsPage = () => {
             <div>
               <label className="block text-sm font-medium mb-2">{t("common.name")}</label>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 placeholder={t("components.enterYourName")}
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
@@ -185,7 +185,7 @@ const ComponentsPage = () => {
             <div>
               <label className="block text-sm font-medium mb-2">{t("common.email")}</label>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 type="email"
                 placeholder={t("components.enterYourEmail")}
                 value={formData.email}
@@ -258,9 +258,9 @@ const ComponentsPage = () => {
       </Card>
       
       {/* Data Cards */}
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>{t("components.dataDisplayCards")}</CardTitle>
+          <CardTitle className="text-xl">{t("components.dataDisplayCards")}</CardTitle>
           <CardDescription>{t("components.dataDisplayCardsDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
@@ -325,9 +325,9 @@ const ComponentsPage = () => {
       </Card>
       
       {/* Data Table */}
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>{t("components.dataTable")}</CardTitle>
+          <CardTitle className="text-xl">{t("components.dataTable")}</CardTitle>
           <CardDescription>{t("components.dataTableDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
@@ -336,9 +336,9 @@ const ComponentsPage = () => {
       </Card>
       
       {/* Image Gallery */}
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>{t("components.imageGallery")}</CardTitle>
+          <CardTitle className="text-xl">{t("components.imageGallery")}</CardTitle>
           <CardDescription>{t("components.imageGalleryDescription")}</CardDescription>
         </CardHeader>
         <CardContent>

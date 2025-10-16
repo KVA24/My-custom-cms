@@ -11,9 +11,9 @@ const OrdersPage = () => {
         <p className="text-gray-600">Manage customer orders</p>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Orders</CardTitle>
+          <CardTitle className="text-xl">Orders</CardTitle>
           <CardDescription>This is a placeholder for the orders page</CardDescription>
         </CardHeader>
         <CardContent>

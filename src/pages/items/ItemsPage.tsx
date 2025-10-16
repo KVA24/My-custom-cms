@@ -9,9 +9,10 @@ import {Edit, Plus, Search, Trash2} from "lucide-react"
 import CrudModal from "./CrudModal.tsx";
 import itemStore from "./itemStore.ts";
 import {observer} from "mobx-react-lite";
-import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import CustomPagination from "@/components/common/CustomPagination.tsx";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb.tsx";
+import TableSkeleton from "@/components/common/TableSkeleton.tsx";
+import languageStore from "@/pages/languages/languageStore.ts";
 
 interface User {
   id: string
@@ -60,16 +61,17 @@ const ItemsPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Items</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">Items</h1>
           <CustomBreadcrumb
             items={[
-              { label: 'Home', href: '/' },
-              { label: 'Items', isCurrent: true },
+              {label: 'Home', href: '/'},
+              {label: 'Items', isCurrent: true},
             ]}
           />
         </div>
         <Button className="flex items-center"
                 onClick={() => {
+                  languageStore.getAll().then()
                   itemStore.clearState()
                   setType("create")
                   setIsModalOpen(true)
@@ -80,9 +82,9 @@ const ItemsPage = observer(() => {
         </Button>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Items List</CardTitle>
+          <CardTitle className="text-xl">Items List</CardTitle>
         </CardHeader>
         <CardContent>
           <div
@@ -90,7 +92,7 @@ const ItemsPage = observer(() => {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"/>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 placeholder={t("common.search")}
                 value={itemStore.searchKey}
                 onChange={(e) => itemStore.searchKey = e.target.value}
@@ -102,9 +104,7 @@ const ItemsPage = observer(() => {
             </div>
           </div>
           {itemStore.isLoading ?
-            <div className="w-full flex justify-center">
-              <LoadingSpinner size={"md"}/>
-            </div>
+            <TableSkeleton rows={5} columns={3}/>
             :
             <Fragment>
               <div className="overflow-x-auto">
@@ -153,6 +153,7 @@ const ItemsPage = observer(() => {
                             data-tooltip-content={t("common.edit")}
                             loading={itemStore.isLoadingGet}
                             onClick={() => {
+                              languageStore.getAll().then()
                               itemStore.getDetail(item.id).then(
                                 () => {
                                   setType("edit")

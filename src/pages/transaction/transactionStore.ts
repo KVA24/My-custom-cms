@@ -174,7 +174,7 @@ class TransactionStore {
 }
 
 const transactionStore = new TransactionStore()
-export const useAuthStore = () => transactionStore
+export const useTransactionStore = () => transactionStore
 
 export {TransactionStore}
 export default transactionStore

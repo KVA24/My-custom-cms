@@ -199,7 +199,7 @@ class ItemStore {
 }
 
 const itemStore = new ItemStore()
-export const useAuthStore = () => itemStore
+export const useItemStore = () => itemStore
 
 export {ItemStore}
 export default itemStore

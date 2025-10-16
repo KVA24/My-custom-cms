@@ -3,6 +3,7 @@
 import * as React from 'react';
 import {cn} from '@/lib/utils';
 import {cva, type VariantProps} from 'class-variance-authority';
+import {inputVariants} from "@/components/ui/input.tsx";
 
 // Define input size variants
 const textareaVariants = cva(
@@ -26,12 +27,20 @@ const textareaVariants = cva(
   },
 );
 
+interface TextareaProps extends React.ComponentProps<'textarea'>, VariantProps<typeof inputVariants> {
+  error?: string;
+}
+
 function Textarea({
                     className,
                     variant,
+                    error,
                     ...props
-                  }: React.ComponentProps<'textarea'> & VariantProps<typeof textareaVariants>) {
-  return <textarea data-slot="textarea" className={cn(textareaVariants({variant}), className)} {...props} />;
+                  }: TextareaProps) {
+  return <div>
+    <textarea data-slot="textarea" className={cn(textareaVariants({variant}), className)} {...props} />
+    {error && <p className="text-sm text-destructive mt-1">{error}</p>}
+  </div>;
 }
 
 export {Textarea, textareaVariants};

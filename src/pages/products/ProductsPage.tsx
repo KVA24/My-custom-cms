@@ -72,9 +72,9 @@ const ProductsPage = () => {
       
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="lg:col-span-3">
-          <Card>
+          <Card className="border-border shadow-sm">
             <CardHeader>
-              <CardTitle>Products</CardTitle>
+              <CardTitle className="text-xl">Products</CardTitle>
               <CardDescription>Manage your product catalog</CardDescription>
             </CardHeader>
             <CardContent>
@@ -82,7 +82,7 @@ const ProductsPage = () => {
                 <div className="relative flex-1 max-w-sm">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"/>
                   <Input
-                  autoComplete="off"
+                    autoComplete="off"
                     placeholder="Search products..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -149,9 +149,9 @@ const ProductsPage = () => {
         </div>
         
         <div className="flex flex-col gap-6">
-          <Card>
+          <Card className="border-border shadow-sm">
             <CardHeader>
-              <CardTitle>Quick Stats</CardTitle>
+              <CardTitle className="text-xl">Quick Stats</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-4">
               <div>

@@ -8,15 +8,15 @@ import {Button} from "@/components/ui/button"
 import {Calendar} from "@/components/ui/calendar"
 
 interface DateRangePickerProps {
-  start?: Date
-  end?: Date
+  start?: Date | null
+  end?: Date | null
   onApply?: (range: DateRange | undefined) => void
 }
 
 const DateRangePicker: React.FC<DateRangePickerProps> = ({start, end, onApply}) => {
   const [isOpen, setIsOpen] = useState(false)
   const [tempDateRange, setTempDateRange] = useState<DateRange | undefined>(
-    start || end ? {from: start, to: end} : undefined,
+    start || end ? {from: start ?? undefined, to: end ?? undefined} : undefined,
   )
   
   const handleApply = () => {
@@ -38,7 +38,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({start, end, onApply}) 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button id="date" variant="outline" className="w-full">
+        <Button id="date" variant="outline" className="w-full text-foreground">
           <CalendarDays size={16} className="me-0.5"/>
           {displayRange?.from ? (
             displayRange.to ? (
@@ -49,7 +49,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({start, end, onApply}) 
               format(displayRange.from, "dd/MM/yyyy")
             )
           ) : (
-            <span>Pick a date range</span>
+            <span className="">Pick a date range</span>
           )}
           {displayRange && (
             <X
@@ -73,7 +73,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({start, end, onApply}) 
           numberOfMonths={2}
         />
         <div className="flex items-center justify-end gap-1.5 border-t border-border p-3">
-          <Button variant="outline" onClick={handleResetTemp}>
+          <Button variant="outline" onClick={handleResetTemp} className="text-foreground">
             Reset
           </Button>
           <Button onClick={handleApply}>Apply</Button>

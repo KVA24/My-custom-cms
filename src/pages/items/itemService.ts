@@ -1,6 +1,7 @@
 import apiClient, {type ApiResponse} from "../../lib/api.ts"
 import {DataRequest} from "@/pages/configs/configStore.ts";
 import itemStore from "./itemStore.ts";
+import languageStore from "@/pages/languages/languageStore.ts";
 
 export class ItemService {
   async getList(): Promise<ApiResponse> {
@@ -9,17 +10,17 @@ export class ItemService {
   }
   
   async getDetail(id: string): Promise<ApiResponse> {
-    const path = `/v1/portal/items/${id}`
+    const path = `/v1/portal/items/${id}?languageId=${languageStore.languageId}`
     return apiClient.get(path)
   }
   
   async create(data: any): Promise<ApiResponse> {
-    const path = `/v1/portal/items`
+    const path = `/v1/portal/items?languageId=${languageStore.languageId}`
     return apiClient.post<DataRequest>(path, data)
   }
   
   async update(id: string | undefined, data: any): Promise<ApiResponse> {
-    const path = `/v1/portal/items/${id}`
+    const path = `/v1/portal/items/${id}?languageId=${languageStore.languageId}`
     return apiClient.put<DataRequest>(path, data)
   }
   

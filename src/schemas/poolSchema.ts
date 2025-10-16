@@ -2,9 +2,7 @@ import * as yup from "yup";
 
 export const poolSchema = yup.object({
   id: yup.string(),
-  poolBudgetId: yup.string(),
   code: yup.string().required("Name is required"),
-  fallbackPoolId: yup.string().nullable(),
   state: yup.string().required("Status is required"),
   rewardMaps: yup.array().of(
     yup.object({

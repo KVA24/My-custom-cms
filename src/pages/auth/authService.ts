@@ -24,7 +24,7 @@ export class AuthService {
     return apiClient.get<User>(path)
   }
   
-  async changePassword(data: ChangePasswordCredentials,sign?: any): Promise<ApiResponse> {
+  async changePassword(data: ChangePasswordCredentials, sign?: any): Promise<ApiResponse> {
     const path = `/v1/portal/account/changePassword?sign=${sign ? sign : ''}`
     return apiClient.put<ChangePasswordCredentials>(path, data)
   }

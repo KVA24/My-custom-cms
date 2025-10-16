@@ -11,9 +11,9 @@ const AnalyticsPage = () => {
         <p className="text-gray-600">View your business analytics</p>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>Analytics Overview</CardTitle>
+          <CardTitle className="text-xl">Analytics Overview</CardTitle>
           <CardDescription>This is a placeholder for the analytics page</CardDescription>
         </CardHeader>
         <CardContent>

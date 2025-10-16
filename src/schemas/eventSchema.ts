@@ -6,7 +6,7 @@ export const eventSchema = yup.object({
   externalId: yup.string().nullable(),
   state: yup.string().required("Status is required"),
   parameterized: yup.boolean(),
-  rewardMaps: yup.array().of(
+  eventParams: yup.array().of(
     yup.object({
       name: yup.string(),
       externalId: yup.number(),

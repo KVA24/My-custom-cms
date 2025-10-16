@@ -2,17 +2,17 @@
 
 import React, {Fragment, useEffect, useState} from "react"
 import {useTranslation} from "react-i18next"
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card.tsx"
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx"
 import {Button} from "@/components/ui/button.tsx"
 import {Input} from "@/components/ui/input.tsx"
 import {Edit, Plus, QrCode, Search, Trash2} from "lucide-react"
 import CrudModal from "./components/CrudModal.tsx";
 import accountStore from "./accountStore.ts";
 import {observer} from "mobx-react-lite";
-import LoadingSpinner from "@/components/common/LoadingSpinner.tsx";
 import CustomPagination from "@/components/common/CustomPagination.tsx";
 import BadgeRender from "@/components/common/BadgeRender.tsx";
 import CustomBreadcrumb from "@/components/common/CustomBreadcrumb.tsx";
+import TableSkeleton from "@/components/common/TableSkeleton.tsx";
 
 interface User {
   id: string
@@ -60,11 +60,11 @@ const AccountsPage = observer(() => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{t("accounts.title")}</h1>
+          <h1 className="text-3xl font-bold dark:text-gray-100 tracking-tight">{t("accounts.title")}</h1>
           <CustomBreadcrumb
             items={[
-              { label: 'Home', href: '/' },
-              { label: 'Accounts', isCurrent: true },
+              {label: 'Home', href: '/'},
+              {label: 'Accounts', isCurrent: true},
             ]}
           />
         </div>
@@ -80,9 +80,9 @@ const AccountsPage = observer(() => {
         </Button>
       </div>
       
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader>
-          <CardTitle>{t("accounts.list")}</CardTitle>
+          <CardTitle className="text-xl">{t("accounts.list")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div
@@ -90,7 +90,7 @@ const AccountsPage = observer(() => {
             <div className="relative flex-1 max-w-sm">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"/>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 placeholder={t("common.search")}
                 value={accountStore.searchKey}
                 onChange={(e) => accountStore.searchKey = e.target.value}
@@ -102,9 +102,7 @@ const AccountsPage = observer(() => {
             </div>
           </div>
           {accountStore.isLoading ?
-            <div className="w-full flex justify-center">
-              <LoadingSpinner size={"md"}/>
-            </div>
+            <TableSkeleton rows={5} columns={3}/>
             :
             <Fragment>
               <div className="overflow-x-auto">

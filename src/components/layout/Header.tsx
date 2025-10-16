@@ -6,10 +6,10 @@ import {observer} from "mobx-react-lite"
 import {useAuthStore} from "@/pages/auth/authStore.ts"
 import {useThemeStore} from "@/stores/themeStore"
 import {useNavigationStore} from "@/stores/navigationStore"
-import {useClickOutside} from "@/hooks/useClickOutside.ts";
-import {ChevronDown, Lock, LogOut, Menu, Monitor, Moon, Settings, Sun, User} from "lucide-react"
+import {useClickOutside} from "@/hooks/useClickOutside.ts"
+import {ChevronDown, Lock, LogOut, Menu, Monitor, Moon, Sun} from "lucide-react"
 import {cn} from "@/lib/utils"
-import PasswordChange from "@/pages/auth/components/PasswordChange.tsx";
+import PasswordChange from "@/pages/auth/components/PasswordChange.tsx"
 
 const Header = observer(() => {
   const {t, i18n} = useTranslation()
@@ -49,24 +49,24 @@ const Header = observer(() => {
   
   return (
     <>
-      <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-        <div className="flex items-center justify-between px-2 py-0">
+      <header className="bg-card/95 backdrop-blur-sm shadow-sm border-b border-border sticky top-0 z-30">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigationStore.toggleMobileSidebar()}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              className="lg:hidden p-2 rounded-lg hover:bg-accent transition-smooth"
             >
               <Menu className="h-5 w-5"/>
             </button>
           </div>
           
           {/* Right Side Actions */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             {/* Theme Switcher */}
             <div className="relative" ref={themeMenuRef}>
               <button
                 onClick={() => setShowThemeMenu(!showThemeMenu)}
-                className="flex items-center gap-1 px-3 py-2 cursor-pointer rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors dark:text-gray-300"
+                className="flex items-center gap-1 px-3 py-2 rounded-lg hover:bg-accent transition-smooth text-foreground"
               >
                 {themeStore.effectiveTheme === "dark" ? <Moon className="h-4 w-4"/> : <Sun className="h-4 w-4"/>}
                 <ChevronDown className="h-3 w-3"/>
@@ -74,7 +74,7 @@ const Header = observer(() => {
               
               {showThemeMenu && (
                 <div
-                  className="absolute right-0 mt-2 w-32 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
+                  className="absolute right-0 mt-2 w-36 bg-card/95 backdrop-blur-sm rounded-lg shadow-lg border border-border py-1 z-50 fade-in">
                   {themeOptions.map((option) => {
                     const Icon = option.icon
                     return (
@@ -85,9 +85,8 @@ const Header = observer(() => {
                           setShowThemeMenu(false)
                         }}
                         className={cn(
-                          "w-full cursor-pointer text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 dark:text-gray-400",
-                          themeStore.theme === option.value &&
-                          "bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-white",
+                          "w-full text-left px-4 py-2 text-sm hover:bg-accent transition-smooth flex items-center gap-2 text-foreground",
+                          themeStore.theme === option.value && "bg-primary/10 text-primary dark:text-primary font-medium",
                         )}
                       >
                         <Icon className="h-4 w-4"/>
@@ -139,39 +138,34 @@ const Header = observer(() => {
             <div className="relative" ref={profileMenuRef}>
               <button
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-accent transition-smooth"
               >
                 <img
                   src={authStore.user?.avatar || "/avatar-default.svg?height=32&width=32"}
                   alt={authStore.user?.username}
-                  className="h-8 w-8 rounded-full"
+                  className="h-8 w-8 rounded-full ring-2 ring-transparent hover:ring-primary/20 transition-smooth"
                 />
                 <div className="text-left hidden sm:block">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">{authStore.user?.username}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{authStore.user?.role}</p>
+                  <p className="text-sm text-foreground ">{authStore.user?.username}</p>
+                  <p className="text-xs text-foreground">{authStore.user?.role}</p>
                 </div>
-                <ChevronDown className="h-4 w-4 text-gray-400"/>
+                <ChevronDown className="h-4 w-4 text-foreground"/>
               </button>
               
               {showProfileMenu && (
                 <div
-                  className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-50">
+                  className="absolute right-0 mt-2 w-48 bg-card/95 backdrop-blur-sm rounded-lg shadow-lg border border-border py-1 z-50 fade-in">
                   <button
                     onClick={handleChangePassword}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white transition-colors flex items-center gap-2">
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-accent transition-smooth flex items-center gap-2 dark:text-gray-300"
+                  >
                     <Lock className="h-4 w-4"/>
-                    {/*<span>{t("nav.profile")}</span>*/}
                     <span>Change Password</span>
                   </button>
-                  {/*<button*/}
-                  {/*  className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2">*/}
-                  {/*  <Settings className="h-4 w-4"/>*/}
-                  {/*  <span>{t("nav.settings")}</span>*/}
-                  {/*</button>*/}
-                  <hr className="my-1 border-gray-200 dark:border-gray-700"/>
+                  <hr className="my-1 border-border"/>
                   <button
                     onClick={handleLogout}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-red-600 dark:text-red-400"
+                    className="w-full text-left px-4 py-2 text-sm hover:bg-accent transition-smooth flex items-center gap-2 text-destructive"
                   >
                     <LogOut className="h-4 w-4"/>
                     <span>{t("nav.logout")}</span>

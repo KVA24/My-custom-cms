@@ -23,8 +23,6 @@ const EditPool = observer(() => {
   
   useEffect(() => {
     poolStore.getListRewards().then()
-    poolStore.getListFallbackPool().then()
-    poolStore.getListBudget().then()
     poolStore.getDetail(id).then()
   }, [])
   
@@ -75,7 +73,7 @@ const EditPool = observer(() => {
           {label: 'Create Pool', isCurrent: true},
         ]}
       />
-      <Card>
+      <Card className="border-border shadow-sm">
         <CardHeader className="flex items-center justify-start gap-2">
           <Button
             variant="secondary"
@@ -84,7 +82,7 @@ const EditPool = observer(() => {
             data-tooltip-content={t("common.back")}
             onClick={handleBack}
           >
-            <ChevronLeft className="h-4 w-4"/>
+            <ChevronLeft className="h-4 w-4 text-foreground"/>
           </Button>
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-100">Edit Pool</h1>
         </CardHeader>
@@ -95,7 +93,7 @@ const EditPool = observer(() => {
                 Code <span className="text-red-500">*</span>
               </Label>
               <Input
-                  autoComplete="off"
+                autoComplete="off"
                 id="code"
                 name="code"
                 type="text"
@@ -104,52 +102,6 @@ const EditPool = observer(() => {
                 placeholder="Enter"
                 error={poolStore.errors.code}
               />
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label variant="secondary">
-                Fallback Pool
-              </Label>
-              <Select
-                name="fallbackPoolId"
-                value={poolStore.dataRequest?.fallbackPoolId || ""}
-                error={poolStore.errors.fallbackPoolId}
-                onValueChange={(value) =>
-                  handleInputChange({
-                    target: {name: "fallbackPoolId", value},
-                  } as React.ChangeEvent<HTMLInputElement>)
-                }>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose Pool"/>
-                </SelectTrigger>
-                <SelectContent>
-                  {(poolStore.listFallbackPools || []).map((item, index) => (
-                    <SelectItem key={index} value={item.id}>{item.code}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex flex-col gap-2">
-              <Label variant="secondary">
-                Budget <span className="text-red-500">*</span>
-              </Label>
-              <Select
-                name="poolBudgetId"
-                value={poolStore.dataRequest?.poolBudgetId || ""}
-                error={poolStore.errors.poolBudgetId}
-                onValueChange={(value) =>
-                  handleInputChange({
-                    target: {name: "poolBudgetId", value},
-                  } as React.ChangeEvent<HTMLInputElement>)
-                }>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Choose Budget"/>
-                </SelectTrigger>
-                <SelectContent>
-                  {(poolStore.listBudgets || []).map((item) => (
-                    <SelectItem key={item.id} value={item.id}>{item.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
             <div className="flex flex-col gap-2">
               <Label variant="secondary">
@@ -221,7 +173,7 @@ const EditPool = observer(() => {
                         </SelectContent>
                       </Select>
                       <Input
-                  autoComplete="off"
+                        autoComplete="off"
                         id="weight"
                         name="weight"
                         type="number"
@@ -303,7 +255,7 @@ const EditPool = observer(() => {
                                 </SelectContent>
                               </Select>
                               <Input
-                  autoComplete="off"
+                                autoComplete="off"
                                 id="schedule.quantity"
                                 name="quantity"
                                 type="number"
