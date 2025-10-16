@@ -22,7 +22,7 @@ export default defineConfig({
     include: ["react", "react-dom"]
   },
   server: {
-    port: 5174,
+    port: 4008,
     open: true,
     cors: true,
     strictPort: true,

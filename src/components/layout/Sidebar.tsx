@@ -210,7 +210,7 @@ const Sidebar = observer(() => {
       >
         {!navigationStore.sidebarCollapsed && (
           <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            LTM Vali CMS
+            Broadcast
           </h1>
         )}
         <button

@@ -1,5 +1,10 @@
-window.global ||= window;
-
-window.PORT = 8140;
-window.API_DOMAIN = "https://dev-pubapi-valigame.wiinvent.tv";
-window.GOOGLE_RECAPTCHA_KEY = "6LfHJOorAAAAABAZbXDHxSnqRLVdUiF2lhUVpFTh";
+window.PORT = 9000;
+window.API_DOMAIN="https://dev-api.wiinvent.tv";
+window.PAGE_DOMAIN="https://dev.page.wiinvent.tv";
+window.GA="";
+window.SENTRY_DSN="";
+window.SENTRY_ENVIRONMENT="";
+window.GTM="";
+window.FIREBASE_CONFIG="";
+window.FIREBASE_KEY_PUBLIC="";
+window.GOOGLE_RECAPTCHA_KEY="6LeKgaAcAAAAAMz0n__p20SjUa5r-CSjhlTjrIU3";

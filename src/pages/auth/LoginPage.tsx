@@ -21,9 +21,9 @@ const LoginPage = observer(() => {
   const {executeRecaptcha} = useGoogleReCaptcha()
   
   const [formData, setFormData] = useState<LoginCredentials>({
-    username: localStorage.getItem("kkk_check_kkk") ? "admin" : "",
-    password: localStorage.getItem("kkk_check_kkk") ? "Matkhau@123" : "",
-    otpCode: "",
+    username: localStorage.getItem("kkk_check_kkk") ? "Testdev@wiinvent.tv" : "",
+    password: localStorage.getItem("kkk_check_kkk") ? "nXqPHQy8q45DZt4" : "",
+    code: "",
   })
   const [errors, setErrors] = useState<Partial<LoginCredentials>>({})
   
@@ -117,21 +117,21 @@ const LoginPage = observer(() => {
               </div>
               
               <div className="space-y-2">
-                <label htmlFor="otpCode" className="block text-sm font-medium">
+                <label htmlFor="code" className="block text-sm font-medium">
                   OTP
                 </label>
                 <Input
                   autoComplete="off"
-                  id="otpCode"
-                  name="otpCode"
+                  id="code"
+                  name="code"
                   type="text"
-                  value={formData.otpCode}
+                  value={formData.code}
                   onChange={handleInputChange}
                   onKeyPress={(e) => {
                     e.key === "Enter" && handleSubmit(e)
                   }}
                   placeholder="Enter otp"
-                  error={errors.otpCode}
+                  error={errors.code}
                   variant="lg"
                   className="transition-smooth"
                 />

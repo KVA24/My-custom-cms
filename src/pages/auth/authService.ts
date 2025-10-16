@@ -15,22 +15,22 @@ export interface RegisterResponse {
 
 export class AuthService {
   async login(credentials: LoginCredentials, sign?: any): Promise<ApiResponse<LoginResponse>> {
-    const path = `/v1/portal/auth/login?sign=${sign ? sign : ''}`
+    const path = `/v1/auth/login?sign=${sign ? sign : ''}`
     return apiClient.post<LoginResponse>(path, credentials)
   }
   
   async getProfile(): Promise<ApiResponse<User>> {
-    const path = "/v1/portal/account/profile"
+    const path = "/v1/users/_me"
     return apiClient.get<User>(path)
   }
   
   async changePassword(data: ChangePasswordCredentials, sign?: any): Promise<ApiResponse> {
-    const path = `/v1/portal/account/changePassword?sign=${sign ? sign : ''}`
+    const path = `/v1/account/changePassword?sign=${sign ? sign : ''}`
     return apiClient.put<ChangePasswordCredentials>(path, data)
   }
   
   async logout(): Promise<ApiResponse> {
-    const path = "/v1/portal/auth/logout"
+    const path = "/v1/auth/logout"
     return apiClient.post<LoginResponse>(path, {})
   }
 }

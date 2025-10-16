@@ -4,7 +4,7 @@ import {format} from "date-fns";
 
 export class LogService {
   async getList(): Promise<ApiResponse> {
-    const path = `/v1/portal/action-log?page=${logStore.page}&limit=${logStore.size}${logStore.searchKey ? `&username=${encodeURIComponent(logStore.searchKey)}` : ''}${
+    const path = `/v1/action-log?page=${logStore.page}&limit=${logStore.size}${logStore.searchKey ? `&username=${encodeURIComponent(logStore.searchKey)}` : ''}${
       logStore.next ? `&next=${logStore.next}` : ''
     }${logStore.previous ? `&pre=${logStore.previous}` : ''}${logStore.searchRole ? `&accountRole=${logStore.searchRole}` : ''}${
       logStore.searchType ? `&actionType=${logStore.searchType}` : ''

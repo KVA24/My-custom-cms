@@ -3,27 +3,27 @@ import configStore, {DataRequest} from "./configStore.ts";
 
 export class ConfigService {
   async getList(): Promise<ApiResponse> {
-    const path = `/v1/portal/configs?page=${configStore.page}&size=${configStore.size}${configStore.searchKey ? `&searchKey=${encodeURIComponent(configStore.searchKey)}` : ''}`
+    const path = `/v1/configs?page=${configStore.page}&size=${configStore.size}${configStore.searchKey ? `&searchKey=${encodeURIComponent(configStore.searchKey)}` : ''}`
     return apiClient.get(path)
   }
   
   async getDetail(id: string): Promise<ApiResponse> {
-    const path = `/v1/portal/configs/${id}`
+    const path = `/v1/configs/${id}`
     return apiClient.get(path)
   }
   
   async create(data: any, sign?: any): Promise<ApiResponse> {
-    const path = `/v1/portal/configs?sign=${sign ? sign : ''}`
+    const path = `/v1/configs?sign=${sign ? sign : ''}`
     return apiClient.post<DataRequest>(path, data)
   }
   
   async update(id: string, data: any, sign?: any): Promise<ApiResponse> {
-    const path = `/v1/portal/configs/${id}?sign=${sign ? sign : ''}`
+    const path = `/v1/configs/${id}?sign=${sign ? sign : ''}`
     return apiClient.put<DataRequest>(path, data)
   }
   
   async delete(id: string, sign?: any, otpCode?: any): Promise<ApiResponse> {
-    const path = `/v1/portal/configs/${id}?sign=${sign ? sign : ''}&otpCode=${otpCode ? otpCode : ''}`
+    const path = `/v1/configs/${id}?sign=${sign ? sign : ''}&otpCode=${otpCode ? otpCode : ''}`
     return apiClient.delete<DataRequest>(path, {})
   }
   

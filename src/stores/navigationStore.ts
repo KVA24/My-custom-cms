@@ -1,20 +1,18 @@
 import {makeAutoObservable} from "mobx"
 import {
-  Award,
-  BookImageIcon,
-  BookUser,
-  ChartColumnDecreasingIcon,
-  ClipboardClock,
-  FileQuestionIcon,
-  History,
-  LanguagesIcon,
+  AntennaIcon,
+  BookAudioIcon,
+  ChartColumnIcon,
+  FileVideo2Icon,
+  FilmIcon,
+  HistoryIcon,
+  HouseIcon,
   LayoutDashboard,
-  LayoutList,
-  ListCheckIcon,
-  Package,
-  Settings,
-  Users,
-  Warehouse
+  MonitorPlayIcon,
+  NotebookIcon,
+  PodcastIcon,
+  TvIcon,
+  User2Icon,
 } from "lucide-react"
 
 export interface MenuItem {
@@ -33,167 +31,91 @@ class NavigationStore {
   activeMenuItem = "dashboard"
   allMenuItems: MenuItem[] = [
     {
-      id: "dashboard",
-      label: "nav.dashboard",
-      icon: LayoutDashboard,
-      path: "/cms/dashboard",
-      roles: ["ADMIN", "OPERATOR"]
-    },
-    {
-      id: "leaderboard",
-      label: "Leaderboard",
-      icon: ChartColumnDecreasingIcon,
-      path: "/cms/leaderboard",
-      roles: ["ADMIN", "OPERATOR"]
-    },
-    {
-      id: "account",
-      label: "nav.accounts",
-      icon: BookUser,
-      path: "/cms/accounts",
-      roles: ["ADMIN"]
-    },
-    {
-      id: "users",
-      label: "Users",
-      icon: Users,
-      path: "/cms/users",
-      roles: ["ADMIN", "OPERATOR", "CC"]
-    },
-    {
-      id: "item",
-      label: "Item",
-      icon: LayoutList,
-      roles: ["ADMIN", "OPERATOR"],
+      id: "home",
+      label: "Home",
+      icon: HouseIcon,
+      roles: ["OWNER", "ADMIN", "OPERATOR"],
       children: [
         {
-          id: "item-list",
-          label: "Items",
-          icon: Package,
-          path: "/cms/items",
+          id: "home-dashboard",
+          label: "Dashboard",
+          icon: LayoutDashboard,
+          path: "/cms/dashboard",
         },
-        // {
-        //   id: "item-store",
-        //   label: "Item Store",
-        //   icon: Store,
-        //   path: "/cms/item-store",
-        // },
         {
-          id: "rewards",
-          label: "Rewards",
-          icon: Award,
-          path: "/cms/rewards",
+          id: "home-user",
+          label: "User Access",
+          icon: User2Icon,
+          path: "/cms/user-access",
+        },
+        {
+          id: "home-log",
+          label: "Log Activity",
+          icon: HistoryIcon,
+          path: "/cms/log-activity",
         },
       ],
     },
     {
-      id: "pool",
-      label: "Pool",
-      icon: Warehouse,
-      path: "/cms/pool",
-      roles: ["ADMIN", "OPERATOR"],
-      // children: [
-      //   {
-      //     id: "pool-list",
-      //     label: "Pools",
-      //     icon: WavesLadder,
-      //     path: "/cms/pool",
-      //   },
-      //   {
-      //     id: "pool-budget",
-      //     label: "Pool Budget",
-      //     icon: BadgeDollarSign,
-      //     path: "/cms/budget",
-      //   },
-      // ]
+      id: "content",
+      label: "Content",
+      icon: TvIcon,
+      roles: ["OWNER", "ADMIN", "OPERATOR"],
+      children: [
+        {
+          id: "content-channel",
+          label: "Channels",
+          icon: AntennaIcon,
+          path: "/cms/channels",
+        },
+        {
+          id: "content-streams",
+          label: "Streams",
+          icon: PodcastIcon,
+          path: "/cms/streams",
+        },
+      ],
     },
     {
-      id: "events",
-      label: "Events",
-      icon: BookImageIcon,
-      path: "/cms/events",
-      roles: ["ADMIN", "OPERATOR"]
+      id: "campaign",
+      label: "Campaign",
+      icon: BookAudioIcon,
+      roles: ["OWNER", "ADMIN", "OPERATOR"],
+      children: [
+        {
+          id: "campaign-ads",
+          label: "Ads",
+          icon: MonitorPlayIcon,
+          path: "/cms/ads",
+        },
+        {
+          id: "campaign-report",
+          label: "Report",
+          icon: ChartColumnIcon,
+          path: "/cms/report",
+        },
+      ],
     },
     {
-      id: "tasks",
-      label: "Tasks",
-      icon: ListCheckIcon,
-      path: "/cms/tasks",
-      roles: ["ADMIN", "OPERATOR"]
+      id: "creatives",
+      label: "Creatives",
+      icon: FileVideo2Icon,
+      roles: ["OWNER", "ADMIN", "OPERATOR"],
+      children: [
+        {
+          id: "creatives-video",
+          label: "Video",
+          icon: FilmIcon,
+          path: "/cms/creatives-video",
+        },
+        {
+          id: "creatives-banner",
+          label: "Banner",
+          icon: NotebookIcon,
+          path: "/cms/creatives-banner",
+        },
+      ],
     },
-    {
-      id: "quiz",
-      label: "Quiz",
-      icon: FileQuestionIcon,
-      path: "/cms/quiz",
-      roles: ["ADMIN", "OPERATOR"]
-    },
-    {
-      id: "transaction",
-      label: "Transaction",
-      icon: ClipboardClock,
-      path: "/cms/transaction",
-      roles: ["ADMIN", "OPERATOR", "CC"]
-    },
-    {
-      id: "settings",
-      label: "nav.configs",
-      icon: Settings,
-      path: "/cms/configs",
-      roles: ["ADMIN"]
-    },
-    {
-      id: "languages",
-      label: "Languages",
-      icon: LanguagesIcon,
-      path: "/cms/languages",
-      roles: ["ADMIN"]
-    },
-    {
-      id: "activityLogs",
-      label: "Logs Activity",
-      icon: History,
-      path: "/cms/activityLogs",
-      roles: ["ADMIN", "OPERATOR"]
-    },
-    // {
-    //   id: "products",
-    //   label: "nav.products",
-    //   icon: "Package",
-    //   children: [
-    //     {
-    //       id: "products-list",
-    //       label: "Products List",
-    //       icon: "List",
-    //       path: "/cms/products",
-    //     },
-    //     {
-    //       id: "products-categories",
-    //       label: "Categories",
-    //       icon: "Tag",
-    //       children: [
-    //         {
-    //           id: "categories-main",
-    //           label: "Main Categories",
-    //           icon: "Folder",
-    //           path: "/cms/products/categories",
-    //         },
-    //         {
-    //           id: "categories-sub",
-    //           label: "Sub Categories",
-    //           icon: "FolderOpen",
-    //           path: "/cms/products/categories/sub",
-    //         },
-    //       ],
-    //     },
-    //     {
-    //       id: "products-inventory",
-    //       label: "Inventory",
-    //       icon: "Warehouse",
-    //       path: "/cms/products/inventory",
-    //     },
-    //   ],
-    // },
   ]
   menuItems: MenuItem[] = []
   

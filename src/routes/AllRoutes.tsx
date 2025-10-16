@@ -8,32 +8,9 @@ import Header from "@/components/layout/Header"
 
 // Pages
 import DashboardPage from "@/pages/dashboard/DashboardPage"
-import LeaderboardPage from "@/pages/leaderboard/LeaderboardPage"
 import AccountsPage from "@/pages/accounts/AccountsPage";
-import UsersPage from "@/pages/users/UsersPage"
-import UsersDetailPage from "@/pages/users/components/UserDetailpage.tsx";
-import ConfigsPage from "@/pages/configs/ConfigsPage";
-import LanguagePage from "@/pages/languages/LanguagePage.tsx";
 import WelcomePage from "@/components/layout/welcome/WelcomePage";
-import ItemsPage from "@/pages/items/ItemsPage.tsx";
-import ItemStorePage from "@/pages/itemStores/ItemStorePage.tsx";
-import CreateItemStore from "@/pages/itemStores/components/CreateItemStore.tsx";
-import EditItemStore from "@/pages/itemStores/components/EditItemStore.tsx";
-import ActivityLogsPage from "@/pages/activityLogs/ActivityLogsPage.tsx";
-import RewardsPage from "@/pages/rewards/RewardsPage.tsx";
-import PoolPage from "@/pages/pool/PoolPage.tsx";
-import CreatePool from "@/pages/pool/components/CreatePool.tsx";
-import EditPool from "@/pages/pool/components/EditPool.tsx";
-import PoolBudgetPage from "@/pages/poolBudget/PoolBudgetPage.tsx";
-import TransactionPage from "@/pages/transaction/TransactionPage.tsx";
 import NotFoundPage from "@/components/layout/notFound/NotFoundPage.tsx";
-import EventPage from "@/pages/events/EventPage.tsx";
-import CreateEvent from "@/pages/events/components/CreateEvent.tsx";
-import EditEvent from "@/pages/events/components/EditEvent.tsx";
-import TaskPage from "@/pages/tasks/TaskPage.tsx";
-import CreateTask from "@/pages/tasks/components/CreateTask.tsx";
-import EditTask from "@/pages/tasks/components/EditTask.tsx";
-import QuizPage from "@/pages/quiz/QuizPage.tsx";
 
 const AllRoutes = observer(() => {
   const navigationStore = useNavigationStore()
@@ -68,42 +45,9 @@ const AllRoutes = observer(() => {
             <Routes>
               <Route path="/" element={<WelcomePage/>}/>
               <Route path="/dashboard" element={<DashboardPage/>}/>
-              <Route path="/leaderboard" element={<LeaderboardPage/>}/>
               <Route path="/accounts" element={<AccountsPage/>}/>
-              <Route path="/users" element={<UsersPage/>}/>
-              <Route path="/users/:id" element={<UsersDetailPage/>}/>
-              <Route path="/items" element={<ItemsPage/>}/>
-              <Route path="/item-store" element={<ItemStorePage/>}/>
-              <Route path="/item-store/create" element={<CreateItemStore/>}/>
-              <Route path="/item-store/edit/:id" element={<EditItemStore/>}/> \
-              <Route path="/rewards" element={<RewardsPage/>}/>
-              <Route path="/pool" element={<PoolPage/>}/>
-              <Route path="/pool/create" element={<CreatePool/>}/>
-              <Route path="/pool/edit/:id" element={<EditPool/>}/>
-              <Route path="/budget" element={<PoolBudgetPage/>}/>
-              <Route path="/events" element={<EventPage/>}/>
-              <Route path="/events/create" element={<CreateEvent/>}/>
-              <Route path="/events/edit/:id" element={<EditEvent/>}/>
-              <Route path="/tasks" element={<TaskPage/>}/>
-              <Route path="/tasks/create" element={<CreateTask/>}/>
-              <Route path="/tasks/edit/:id" element={<EditTask/>}/>
-              <Route path="/quiz" element={<QuizPage/>}/>
-              <Route path="/transaction" element={<TransactionPage/>}/>
-              <Route path="/configs" element={<ConfigsPage/>}/>
-              <Route path="/languages" element={<LanguagePage/>}/>
-              <Route path="/activityLogs" element={<ActivityLogsPage/>}/>
-              <Route path="*" element={<NotFoundPage/>}/>
-              
-              {/*<Route path="/products" element={<ProductsPage/>}/>*/}
-              {/*<Route path="/products/categories" element={<CategoriesPage/>}/>*/}
-              {/*<Route path="/products/categories/sub" element={<SubCategoriesPage/>}/>*/}
-              {/*<Route path="/products/inventory" element={<InventoryPage/>}/>*/}
-              {/*<Route path="/orders" element={<OrdersPage/>}/>*/}
-              {/*<Route path="/analytics" element={<AnalyticsPage/>}/>*/}
-              {/*<Route path="/analytics/reports" element={<ReportsPage/>}/>*/}
-              {/*<Route path="/settings" element={<SettingsPage/>}/>*/}
-              {/*<Route path="/components" element={<ComponentsPage/>}/>*/}
             
+              <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
           </div>
         </main>

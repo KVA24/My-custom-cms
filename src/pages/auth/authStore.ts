@@ -14,7 +14,7 @@ export interface User {
 export interface LoginCredentials {
   username: string
   password: string
-  otpCode?: string
+  code?: string
 }
 
 export interface RegisterCredentials {
@@ -28,7 +28,7 @@ export interface ChangePasswordCredentials {
   oldPassword: string
   newPassword: string
   confirmNewPassword: string
-  otpCode?: string
+  code?: string
 }
 
 class AuthStore {
@@ -41,7 +41,7 @@ class AuthStore {
     oldPassword: "",
     newPassword: "",
     confirmNewPassword: "",
-    otpCode: ""
+    code: ""
   }
   errors: any = {};
   
@@ -54,7 +54,7 @@ class AuthStore {
       oldPassword: "",
       newPassword: "",
       confirmNewPassword: "",
-      otpCode: ""
+      code: ""
     }
     this.errors = {}
   }

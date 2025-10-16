@@ -37,7 +37,7 @@ const ImageUpload = ({
                        maxFiles = 5,
                        maxSize = 5,
                        accept = "image/*",
-                       uploadUrl = "/v1/portal/images/upload/static",
+                       uploadUrl = "/v1/images/upload/static",
                        className,
                        disabled = false,
                      }: ImageUploadProps) => {

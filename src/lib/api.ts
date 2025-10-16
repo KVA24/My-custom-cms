@@ -102,7 +102,7 @@ class ApiClient {
     
     try {
       const response = await axios.post<ApiResponse<RefreshTokenResponse>>(
-        `${config.API_URL || "http://localhost:3000/api"}/v1/portal/auth/refresh`,
+        `${config.API_URL || "http://localhost:3000/api"}/v1/auth/refresh`,
         {refreshToken},
         {timeout: 5000},
       )
